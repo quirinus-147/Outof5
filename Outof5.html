@@ -1,0 +1,2951 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Outof5 · 官方</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #1d1d1f;
+        }
+
+        /* ===== 顶部栏 ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #0b3d2e;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 56px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        .logo span {
+            color: #7ed6a8;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-toggle .bar {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 1px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .menu-toggle.open .bar:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+        .menu-toggle.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.open .bar:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* ===== 抽屉菜单 ===== */
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 200;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+            transition: right 0.25s ease;
+            overflow-y: auto;
+            padding-top: 56px;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 150;
+            display: none;
+        }
+
+        .drawer-overlay.open {
+            display: block;
+        }
+
+        .drawer nav {
+            padding: 12px 0;
+        }
+
+        .drawer .menu-item {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            color: #1d1d1f;
+            padding: 14px 24px;
+            cursor: pointer;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .drawer .menu-item:hover {
+            background: #ecf1ef;
+        }
+
+        .drawer .divider {
+            height: 1px;
+            background: #e5e5ea;
+            margin: 8px 24px;
+        }
+
+        /* ===== 社区折叠组 ===== */
+        .group-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            color: #1d1d1f;
+            padding: 14px 24px;
+            cursor: pointer;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .group-toggle:hover {
+            background: #f5f5f7;
+        }
+
+        .group-toggle .arrow {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #86868b;
+            transition: transform 0.2s;
+            margin-left: 6px;
+            flex-shrink: 0;
+        }
+
+        .group-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .group-children {
+            display: none;
+            background: #fafafa;
+        }
+
+        .group-children.open {
+            display: block;
+        }
+
+        .group-children .menu-item {
+            padding-left: 44px;
+            font-size: 15px;
+            color: #4a4a4f;
+        }
+
+        .group-children .menu-item:hover {
+            background: #f0f0f2;
+            color: #1d1d1f;
+        }
+
+        /* ===== 底部两个淡色按钮并排 ===== */
+        .drawer .bottom-row {
+            display: flex;
+            gap: 0;
+            margin-top: 8px;
+            border-top: 1px solid #e5e5ea;
+            padding-top: 8px;
+        }
+
+        .drawer .bottom-row .menu-item {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #a1a1a6;
+            padding: 12px 8px;
+        }
+
+        .drawer .bottom-row .menu-item:hover {
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        /* ===== 主内容区 ===== */
+        .main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: #0b3d2e;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 12px;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            user-select: none;
+        }
+
+        /* ============================================================
+           节目单
+           ============================================================ */
+        .setlist {
+            margin-bottom: 64px;
+        }
+
+        .setlist-green {
+            display: inline-block;
+            background: #2e7d5b;
+            color: #ffffff;
+            padding: 10px 18px;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        .setlist-green .band-line {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .setlist-green .date-line {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .venue-block {
+            margin-bottom: 6px;
+        }
+
+        .venue-name {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.25;
+            color: #1d1d1f;
+            letter-spacing: 0.5px;
+        }
+
+        .venue-city {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 6px;
+        }
+
+        .soundcheck {
+            font-size: 15px;
+            font-style: italic;
+            color: #4a4a4f;
+            margin-bottom: 28px;
+        }
+
+        .set-label {
+            font-size: 17px;
+            font-weight: 800;
+            color: #1d1d1f;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .set-songs {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #1d1d1f;
+            margin-bottom: 26px;
+            user-select: text;
+            -webkit-user-select: text;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        .set-songs ::selection {
+            background: #3b6eff;
+            color: #ffffff;
+        }
+
+        .set-songs ::-moz-selection {
+            background: #3b6eff;
+            color: #ffffff;
+        }
+
+        .set-songs .arrow {
+            color: #86868b;
+            font-weight: 400;
+        }
+
+        .set-songs .footnote-mark {
+            font-size: 12px;
+            vertical-align: super;
+            color: #0b3d2e;
+            font-weight: 600;
+        }
+
+        .setlist-footnotes {
+            font-size: 13px;
+            color: #4a4a4f;
+            line-height: 1.9;
+            margin-top: 12px;
+        }
+
+        /* ===== 新闻块 ===== */
+        .news-block {
+            margin-bottom: 40px;
+        }
+
+        .news-date {
+            font-size: 13px;
+            color: #86868b;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .news-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+
+        .news-source {
+            font-size: 13px;
+            color: #0b3d2e;
+            font-weight: 600;
+            margin-bottom: 28px;
+        }
+
+        .dialogue {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #333336;
+        }
+        .dialogue p {
+                margin-bottom: 14px;
+            }
+
+        .dialogue .line {
+            margin-bottom: 14px;
+        }
+
+        .dialogue .speaker {
+            font-weight: 700;
+            color: #0b3d2e;
+            margin-right: 6px;
+        }
+
+        /* ===== 博客区块 ===== */
+        .blog-block {
+            margin-bottom: 56px;
+        }
+
+        .blog-source {
+            font-size: 13px;
+            color: #0b3d2e;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .blog-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 24px;
+        }
+
+        .notice-list p {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #333336;
+            margin-bottom: 14px;
+        }
+
+        .notice-speaker {
+            font-weight: 700;
+            color: #0b3d2e;
+            margin-right: 6px;
+        }
+
+        /* 阅读更多 / 返回按钮 */
+        .read-more {
+            display: inline-block;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0b3d2e;
+            padding: 4px 0;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: opacity 0.15s;
+        }
+
+        .read-more:hover {
+            opacity: 0.7;
+        }
+
+        .read-more.back {
+            margin-bottom: 16px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        /* ===== 场景 ===== */
+        .scene {
+            display: none;
+        }
+
+        .scene.active {
+            display: block;
+        }
+
+        .placeholder-scene {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+            color: #86868b;
+        }
+
+        .placeholder-scene h2 {
+            font-size: 22px;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                height: 52px;
+                padding: 0 16px;
+            }
+            .main {
+                padding: 24px 14px 60px;
+            }
+            .news-title {
+                font-size: 20px;
+            }
+            .drawer {
+                width: 280px;
+                right: -280px;
+            }
+            .drawer .menu-item {
+                padding: 16px 24px;
+            }
+            .dialogue {
+                font-size: 15px;
+            }
+            .venue-name {
+                font-size: 19px;
+            }
+            .venue-city {
+                font-size: 16px;
+            }
+            .setlist-green .band-line,
+            .setlist-green .date-line {
+                font-size: 15px;
+            }
+            .set-songs {
+                font-size: 14px;
+                line-height: 1.9;
+            }
+            .set-label {
+                font-size: 15px;
+            }
+            .notice-list p {
+                font-size: 14px;
+            }
+            .blog-title {
+                font-size: 19px;
+            }
+            .check-title {
+                font-size: 26px;
+                margin-bottom: 28px;
+            }
+            .check-box {
+                padding: 12px 14px;
+                margin-bottom: 28px;
+            }
+        }
+        /* ===== 音乐与图表 ===== */
+            .music-heading {
+                font-size: 22px;
+                font-weight: 700;
+                color: #1d1d1f;
+                margin-bottom: 28px;
+            }
+
+            .album {
+                border-bottom: 1px solid #e5e5ea;
+                cursor: grab;
+                transition: background 0.15s, opacity 0.15s;
+                touch-action: none;
+            }
+
+            .album {
+                -webkit-user-select: none;
+                user-select: none;
+                -webkit-touch-callout: none;   /* 关键：禁止 iOS 长按弹出菜单 */
+                -webkit-tap-highlight-color: transparent;
+            }
+            .album-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                background: none;
+                border: none;
+                font-family: inherit;
+                font-size: 18px;
+                font-weight: 700;
+                color: #1d1d1f;
+                padding: 18px 0;
+                cursor: pointer;
+                transition: color 0.15s;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .album-toggle:hover {
+                color: #0b3d2e;
+            }
+
+            .album-arrow {
+                display: inline-block;
+                width: 0;
+                height: 0;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 7px solid #86868b;
+                transition: transform 0.2s;
+                flex-shrink: 0;
+            }
+
+            .album-toggle.open .album-arrow {
+                transform: rotate(180deg);
+            }
+
+            .album-songs {
+                display: none;
+                padding: 0 0 20px 0;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .album-songs.open {
+                display: flex;
+            }
+
+            .song-link,
+            .song-disabled {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .song-link {
+                color: #0b3d2e;
+                font-weight: 600;
+                cursor: pointer;
+                transition: opacity 0.15s;
+            }
+
+            .song-link:hover {
+                opacity: 0.7;
+            }
+
+            .song-disabled {
+                color: #a1a1a6;
+                cursor: default;
+            }
+            /* ===== Bot Check 风格 ===== */
+            .check-panel {
+                max-width: 520px;
+                margin: 0 auto;
+            }
+
+            .check-title {
+                font-size: 34px;
+                font-weight: 800;
+                color: #1d1d1f;
+                text-align: center;
+                margin-bottom: 40px;
+                letter-spacing: -0.5px;
+            }
+
+            /* 类似 Cloudflare 的验证框 */
+            .check-box {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #f7f7f7;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                padding: 14px 16px;
+                margin-bottom: 36px;
+            }
+
+            .check-box-left {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .check-icon {
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                border: 2px solid #d2d2d7;
+                display: inline-block;
+                position: relative;
+            }
+
+            .check-icon::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #d2d2d7;
+                transform: translate(-50%, -50%);
+            }
+
+            .check-box-text {
+                font-size: 14px;
+                color: #1d1d1f;
+            }
+
+            .check-box-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 2px;
+            }
+
+            .check-box-brand {
+                font-size: 12px;
+                font-weight: 700;
+                color: #1d1d1f;
+                letter-spacing: 0.5px;
+            }
+
+            .check-box-sub {
+                font-size: 10px;
+                color: #86868b;
+            }
+
+            /* 表单 */
+            .check-fields {
+                max-width: 420px;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            /* 每个问题一个灰色底框 */
+            .check-question-box {
+                background: #f2f2f4;
+                border: 1px solid #e0e0e0;
+                border-radius: 4px;
+                padding: 16px;
+            }
+
+            .check-label {
+                display: block;
+                font-size: 14px;
+                font-weight: 600;
+                color: #1d1d1f;
+                margin-bottom: 8px;
+            }
+
+            .check-input {
+                width: 100%;
+                font-family: inherit;
+                font-size: 15px;
+                color: #1d1d1f;
+                background: #ffffff;
+                border: 1px solid #c8c8cc;
+                border-radius: 3px;
+                padding: 10px 12px;
+                outline: none;
+                transition: border-color 0.15s;
+                -webkit-appearance: none;
+            }
+
+            .check-input:focus {
+                border-color: #0b3d2e;
+            }
+
+            .check-submit {
+                display: block;
+                width: 100%;
+                font-family: inherit;
+                font-size: 15px;
+                font-weight: 600;
+                color: #ffffff;
+                background: #0b3d2e;
+                border: none;
+                border-radius: 4px;
+                padding: 12px;
+                cursor: pointer;
+                margin-top: 4px;
+                transition: opacity 0.15s;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .check-submit:hover {
+                opacity: 0.85;
+            }
+
+            .check-submit:active {
+                opacity: 0.75;
+            }
+            /* ===== 论坛 ===== */
+            .forum-title {
+                font-size: 22px;
+                font-weight: 700;
+                color: #1d1d1f;
+                margin-bottom: 12px;
+            }
+
+            .forum-note {
+                font-size: 15px;
+                color: #4a4a4f;
+                line-height: 1.9;
+            }.album {
+    border-bottom: 1px solid #e5e5ea;
+    cursor: grab;
+    transition: background 0.15s, opacity 0.15s;
+}
+
+            .album:active {
+                cursor: grabbing;
+            }
+
+            .album.dragging {
+                opacity: 0.4;
+            }
+
+            .album.drag-over {
+                background: #f0f6ff;
+            }/* 拖动排序 */
+            .album {
+                cursor: grab;
+                transition: opacity 0.15s;
+                touch-action: none;
+            }
+
+            .album.dragging {
+                opacity: 0.7;
+                background: #fafafa;
+                border-radius: 6px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            .album.drag-over {
+                border-top: 2px solid #0b3d2e;
+            }
+
+            .album-placeholder {
+                background: transparent;
+                border: none;
+            }
+
+            /* ===== 排序标识 ===== */
+            .sort-indicator {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 24px;
+                user-select: none;
+                color: #86868b;
+                font-size: 13px;
+            }
+
+            .arrow-down {
+                display: block;
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+            }
+
+            .arrow-down {
+                border-top: 6px solid #a1a1a6;
+            }
+
+            .sort-label {
+                font-size: 13px;
+                letter-spacing: 0.2px;
+            }
+            /* ===== 单曲页面 ===== */
+.song-page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 28px;
+}
+
+.song-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 420px;
+    margin-bottom: 24px;
+}
+
+.song-action-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    background: #abc1af;
+    border: none;
+    border-radius: 4px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.song-action-btn:hover {
+    opacity: 0.9;
+}
+
+.song-action-btn:active {
+    opacity: 0.8;
+}
+
+/* 演艺人员下拉容器 */
+.artist-dropdown {
+    position: relative;
+}
+
+.artist-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.artist-arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #ffffff;
+    transition: transform 0.2s;
+}
+
+.artist-toggle.open .artist-arrow {
+    transform: rotate(180deg);
+}
+
+/* 下拉菜单 */
+.artist-menu {
+    display: none;
+    background: #ffffff;
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    margin-top: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.artist-menu.open {
+    display: block;
+}
+
+.artist-menu-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 16px;
+    color: #1d1d1f;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.artist-menu-item:hover {
+    background: #ecf1ef;
+}
+
+/* 内容面板 */
+.song-panel {
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.9;
+    color: #333336;
+    min-height: 40px;
+}
+
+.song-panel p {
+    margin-bottom: 14px;
+}
+/* ===== 论坛置顶帖 ===== */
+.forum-pin {
+    margin-bottom: 24px;
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f0f7f2; /* 淡绿色底 */
+}
+
+
+.pin-badge {
+    display: inline-block;
+    background: #3b6eff; /* 蓝色置顶标志 */
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.pin-title {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.4;
+}
+
+/* 论坛首页的帖子条目：整块可点 */
+.forum-pin {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f0f7f2;
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.forum-pin:hover {
+    background: #e6f0ea;
+}
+
+.pin-badge {
+    display: inline-block;
+    background: #195327;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    margin-right: 8px;
+}
+
+.pin-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.4;
+}
+
+.pin-meta {
+    display: block;
+    font-size: 12px;
+    color: #86868b;
+    margin-top: 8px;
+}
+
+/* 帖子详情页的标题区 */
+.forum-pin-detail {
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    background: #f0f7f2;
+    padding: 16px 18px;
+    margin-bottom: 24px;
+}
+
+.forum-pin-detail .pin-title {
+    margin-top: 8px;
+}
+
+/* 楼层容器 */
+.forum-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.pin-meta {
+    font-size: 12px;
+    color: #86868b;
+    padding: 0 18px 12px;
+    border-top: none;
+}
+
+
+.forum-floor {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 14px 16px;
+    background: #ffffff; /* 默认白色 */
+}
+
+/* 偶数楼层淡绿色底，区分 */
+.forum-floor:nth-child(even) {
+    background: #f0f7f2;
+}
+
+.floor-user {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0b3d2e;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #d6e3da; /* 浅色银线 */
+}
+
+.floor-content {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333336;
+}
+
+.floor-content p {
+    margin-bottom: 10px;
+}
+
+.floor-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* @ 用户名标蓝 */
+.floor-reply {
+    color: #5776caf5;
+    font-weight: 400;
+}
+
+/* 越南语翻译选中效果 */
+.translate-target {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.translate-target ::selection {
+    background: #3b6eff;
+    color: #ffffff;
+}
+
+.translate-target ::-moz-selection {
+    background: #3b6eff;
+    color: #ffffff;
+}
+/* 论坛底部登录提示 */
+.forum-login-hint {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 13px;
+    color: #86868b;
+}
+
+.forum-login-hint a {
+    color: #0b3d2e;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.forum-login-hint a:hover {
+    opacity: 0.7;
+}
+/* ===== 登录弹窗 ===== */
+.login-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 500;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-modal-overlay.open {
+    display: flex;
+}
+
+.login-modal {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.login-modal-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+
+.login-modal-close {
+    background: none;
+    border: none;
+    color: #86868b;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0 4px;
+}
+
+.login-modal-close:hover {
+    color: #1d1d1f;
+}
+
+.login-modal-body {
+    display: flex;
+    gap: 16px;
+    padding: 20px 16px 12px;
+}
+
+.login-modal-icon {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    color: #0b3d2e;
+    line-height: 1.4;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 15px;
+}
+
+.login-modal-fields {
+    flex: 1;
+}
+
+.login-modal-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.login-modal-field label {
+    width: 64px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1f;
+    flex-shrink: 0;
+}
+
+.login-modal-field input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid #c8c8cc;
+    border-radius: 3px;
+    background: #ffffff;
+    color: #1d1d1f;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+}
+
+.login-modal-field input:focus {
+    border-color: #0b3d2e;
+}
+
+.login-modal-note {
+    font-size: 12px;
+    color: #86868b;
+    margin-top: 4px;
+}
+
+.login-modal-footer {
+    border-top: 1px solid #e5e5ea;
+    padding: 12px 16px 16px;
+}
+
+.login-modal-feedback {
+    font-size: 13px;
+    min-height: 18px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.login-modal-feedback.err {
+    color: #c4271e;
+}
+
+.login-modal-feedback.ok {
+    color: #0b3d2e;
+}
+
+.login-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.login-modal-buttons button {
+    min-width: 72px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.login-modal-buttons .btn-cancel {
+    background: #f5f5f7;
+    border: 1px solid #d2d2d7;
+    color: #1d1d1f;
+}
+
+.login-modal-buttons .btn-cancel:hover {
+    background: #ebebed;
+}
+
+.login-modal-buttons .btn-ok {
+    background: #0b3d2e;
+    border: 1px solid #0b3d2e;
+    color: #ffffff;
+}
+
+.login-modal-buttons .btn-ok:hover {
+    opacity: 0.85;
+}
+/* ===== 成员页 ===== */
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.member-card {
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(135deg, #e8e8ea 0%, #c8c8cc 100%);
+    border: 1px solid #b0b0b5;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 2px 6px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 480px) {
+    .member-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* ===== 成员页页脚 ===== */
+.member-footer {
+    margin-top: 40px;
+    padding: 16px 18px;
+    background: #f2f2f4;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #4a4a4f;
+    user-select: none;
+}
+
+.member-footer-line {
+    margin-bottom: 6px;
+}
+
+.member-footer-url {
+    color: #0b3d2e;
+    font-weight: 600;
+}
+
+.member-footer-copy {
+    font-size: 11px;
+    color: #86868b;
+    letter-spacing: 0.3px;
+}
+/* ===== 专辑排序成功反馈 ===== */
+.album.correct-flash {
+    animation: albumFlashGreen 0.45s ease-in-out 3;
+}
+
+@keyframes albumFlashGreen {
+    0%   { background: #f0f7f2; }
+    50%  { background: #b7f0c83f; }
+    100% { background: #f0f7f289; }
+}
+
+.album.locked {
+    cursor: default;
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+
+<!-- ===== 顶部栏 ===== -->
+<header class="header">
+    <div class="logo">Outof<span>5</span></div>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单" onclick="toggleMenu()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+</header>
+
+<!-- ===== 抽屉菜单 ===== -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeMenu()"></div>
+<div class="drawer" id="drawer">
+    <nav>
+        <button class="menu-item" onclick="navigate('home')">首页</button>
+        <button class="menu-item" onclick="navigate('shows')">演出与节目单</button>
+        <button class="menu-item" onclick="navigate('music')">音乐和图表</button>
+        <button class="menu-item" onclick="navigate('members')">成员</button>
+
+        <button class="group-toggle" id="communityToggle" onclick="toggleCommunity()">
+            <span>社区</span>
+            <span class="arrow"></span>
+        </button>
+        <div class="group-children" id="communityChildren">
+            <button class="menu-item" onclick="navigate('forum')">论坛</button>
+            <button class="menu-item" onclick="navigate('blog')">博客</button>
+            <button class="menu-item" onclick="navigate('news')">新闻</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bottom-row">
+            <button class="menu-item" onclick="navigate('website')">所思账号</button>
+            <button class="menu-item" onclick="navigate('contact')">联系</button>
+        </div>
+    </nav>
+</div>
+
+<!-- ===== 主内容 ===== -->
+<main class="main">
+
+    <!-- 场景：首页 -->
+    <div class="scene active" id="scene-home">
+        <div class="setlist">
+            <span class="category-tag">片单</span>
+
+            <div class="setlist-green">
+                <div class="band-line">OUTOF5, 周六</div>
+                <div class="date-line">2026/10/17</div>
+            </div>
+
+            <div class="venue-block">
+                <div class="venue-name">越南站</div>
+                <div class="venue-city">Vietnam</div>
+            </div>
+
+            <div class="soundcheck">试音: 《耐心》</div>
+
+            <div class="set-label">第1组</div>
+            <div class="set-songs" id="homeGroup1" data-original="home1">
+                <span class="song">《从深中来》</span> <span class="arrow">&gt;</span>
+                <span class="song">《霓虹膜》</span> <span class="arrow">&gt;</span>
+                <span class="song">《Galaxies never seen before》</span> <span class="arrow">&gt;</span>
+                <span class="song">《sáng》</span> <span class="arrow">&gt;</span>
+                <span class="song">《与光同尘》</span>
+            </div>
+
+            <div class="set-label">第2组</div>
+            <div class="set-songs" id="homeGroup2" data-original="home2">
+                <span class="song">《奥斯汀切花》</span> <span class="arrow">&gt;</span>
+                <span class="song">《玻璃纤维》</span><span class="footnote-mark">[1]</span> <span class="arrow">&gt;</span>
+                <span class="song">《날아가다》</span> <span class="arrow">&gt;</span>
+                <span class="song">《十二万亿》</span><span class="footnote-mark">[2]</span> <span class="arrow">&gt;</span>
+                <span class="song">《继续，然后永远》</span>
+            </div>
+
+            <div class="setlist-footnotes" id="homeFootnotes">
+                [1] 未完成<br>
+                [2] 改为独唱
+            </div>
+        </div>
+
+        <!-- 博客（简版，只显示第3条） -->
+        <div class="blog-block">
+            <span class="category-tag">博客</span>
+            <h2 class="blog-title">BDE的文明观演须知</h2>
+
+            <div class="notice-list">
+                <p><span class="notice-speaker">B:1</span> 在观看演唱会期间，请不要大声喧哗，影响他人观演及当地秩序。</p>
+                <p><span class="notice-speaker">2</span> 我们会尽量维护当地安保质量，不过请不要携带易燃易爆品进入场馆，避免造成人员伤亡。也请不要带入食物和水。</p>
+                <p><span class="notice-speaker">2.1</span> 特地要说明的是，现在越南当地天气炎热，请不要携带灯牌魔改棒等发光物，避免过热造成火灾。不要攜帶易碎品進入場館，不要带头灯恶意照射他人，也请不要携带三脚架及摄像机等录音录像设备，避免遮盖他人视线。</p>
+                <p><span class="notice-speaker">E:3</span> 为了保证演出效果，在舞台下方会设立激光灯，内场前排观众请不要离舞台太近，以免受伤。</p>
+            </div>
+            <button class="read-more" onclick="goto('scene-blog-full')">阅读更多</button>
+        </div>
+
+        <!-- 短片 -->
+        <div class="news-block">
+            <span class="category-tag">短片</span>
+
+            <div class="news-date">2026 / 10 / 8</div>
+            <h1 class="news-title">A和C的本周末巡演越南站宣传</h1>
+            <div class="news-source">by Outof5.com</div>
+
+            <div class="dialogue">
+                <div class="line"><span class="speaker">A：</span>好吗？朋友们，为了Sanger，我是Outof5的红色担当A，我们将在下一周开启我们新的回归巡演。</div>
+                <div class="line"><span class="speaker">C：</span>嘿，不要这么说，我们又不是地下偶像，有什么担当呢。</div>
+                <div class="line"><span class="speaker">A：</span>好吧，不过你也穿了最近定的代表色的衣服，就不要说我了，下一站我们将定在越南。</div>
+                <div class="line"><span class="speaker">C：</span>为了帮助粉丝朋友们更好的进行观演，我们将协助当地进行一些诸如𢖵的汉字指引，为了避免语义混淆，我们特地拜托主办方在活动相关斟酌用词。</div>
+                <div class="line"><span class="speaker">A：</span>同时为了照顾当地粉丝，我们将在此次巡演推出不属于回归专辑的越南语单曲，同时还有D的绝技表演。</div>
+                <div class="line"><span class="speaker">C：</span>也许吧，我为了苦练发音，特地去给每个词注音。</div>
+                <div class="line"><span class="speaker">A：</span>你在单词本旁边标的原来是注音啊，不过很高兴在各个地方能看到你们！</div>
+                <div class="line"><span class="speaker">C：</span>把你自己的part都看好吧。</div>
+            </div>
+            <!-- 新闻简版：专访Outof5概念 -->
+            <div class="news-block" style="margin-top:48px;">
+                <span class="category-tag">新闻</span>
+
+                <div class="news-date">2023 / 1 / 17</div>
+                <h1 class="news-title">专访Outof5概念，宇宙尺度与私人触感。</h1>
+                <div class="news-source">by 字方</div>
+
+                <div class="dialogue">
+                    <p>男团概念可以是什么样子？作为最近引发热议的新人中国男团的Outof5，中文团名除五外，给出了新的答案。</p>
+                </div>
+                <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 场景：演出与节目单 -->
+    <div class="scene" id="scene-shows">
+        <div class="setlist" style="margin-bottom:0;">
+            <div class="setlist-green">
+                <div class="band-line">OUTOF5, 周六</div>
+                <div class="date-line">2026/10/17</div>
+            </div>
+
+            <div class="venue-block">
+                <div class="venue-name">越南站</div>
+                <div class="venue-city">Vietnam</div>
+            </div>
+
+            <div class="soundcheck">试音: 《耐心》</div>
+
+            <div class="set-label">第1组</div>
+            <div class="set-songs" id="showsGroup1" data-original="shows1">
+                <span class="song">《从深中来》</span> <span class="arrow">&gt;</span>
+                <span class="song">《霓虹膜》</span> <span class="arrow">&gt;</span>
+                <span class="song">《Galaxies never seen before》</span> <span class="arrow">&gt;</span>
+                <span class="song">《sáng》</span> <span class="arrow">&gt;</span>
+                <span class="song">《与光同尘》</span>
+            </div>
+
+            <div class="set-label">第2组</div>
+            <div class="set-songs" id="showsGroup2" data-original="shows2">
+                <span class="song">《奥斯汀切花》</span> <span class="arrow">&gt;</span>
+                <span class="song">《玻璃纤维》</span><span class="footnote-mark">[1]</span> <span class="arrow">&gt;</span>
+                <span class="song">《날아가다》</span> <span class="arrow">&gt;</span>
+                <span class="song">《十二万亿》</span><span class="footnote-mark">[2]</span> <span class="arrow">&gt;</span>
+                <span class="song">《继续，然后永远》</span>
+            </div>
+
+            <div class="setlist-footnotes" id="showsFootnotes">
+                [1] 未完成<br>
+                [2] 改为独唱
+            </div>
+        </div>
+    </div>
+
+    <!-- 场景：博客总页（简版，只显示第3条） -->
+    <div class="scene" id="scene-blog">
+        <div class="blog-block" style="margin-bottom:0;">
+            <span class="category-tag">博客</span>
+            <div class="blog-source">Outof5官方</div>
+            <h2 class="blog-title">BDE的文明观演须知</h2>
+
+            <div class="notice-list">
+                <p><span class="notice-speaker">B:1</span> 在观看演唱会期间，请不要大声喧哗，影响他人观演及当地秩序。</p>
+                <p><span class="notice-speaker">2</span> 我们会尽量维护当地安保质量，不过请不要携带易燃易爆品进入场馆，避免造成人员伤亡。也请不要带入食物和水。</p>
+                <p><span class="notice-speaker">2.1</span> 特地要说明的是，现在越南当地天气炎热，请不要携带灯牌魔改棒等发光物，避免过热造成火灾。不要攜帶易碎品進入場館，不要带头灯恶意照射他人，也请不要携带三脚架及摄像机等录音录像设备，避免遮盖他人视线。</p>
+                <p><span class="notice-speaker">E:3</span> 为了保证演出效果，在舞台下方会设立激光灯，内场前排观众请不要舞台太近，以免受伤。</p>
+            </div>
+            <button class="read-more" onclick="goto('scene-blog-full')">阅读更多</button>
+            <!-- 新博客：Sanger怎么发音？ -->
+        <div class="blog-block" style="margin-top:48px;">
+            <span class="category-tag">博客</span>
+            <div class="blog-source">Outof5官方</div>
+            <h2 class="blog-title">Sanger怎么发音？</h2>
+
+            <div class="notice-list">
+                <p>作为由Outof5成员A在2021年就敲定的团粉丝名，Sanger的灵感来源，据他所言是德语的歌手(Sänger)一词。他希望粉丝不仅仅是作为表演的旁观者，也用自己的方式可以参与到团体的表现中，例如在演唱会中常常出现的小声跟唱，他表示对此十分高兴。</p>
+            </div>
+            <button class="read-more" onclick="goto('scene-blog-sanger-full')">阅读更多</button>
+        </div>
+        </div>
+    </div>
+
+    <!-- 场景：博客完整版（全部12条） -->
+    <div class="scene" id="scene-blog-full">
+        <div class="blog-block" style="margin-bottom:0;">
+            <button class="read-more back" onclick="goto('scene-blog')">‹ 返回博客</button>
+            <span class="category-tag">博客</span>
+            <div class="blog-source">Outof5官方</div>
+            <h2 class="blog-title">BDE的文明观演须知</h2>
+
+            <div class="notice-list">
+                <p><span class="notice-speaker">B:1</span> 在观看演唱会期间，请不要大声喧哗，影响他人观演及当地秩序。</p>
+                <p><span class="notice-speaker">2</span> 我们会尽量维护当地安保质量，不过请不要携带易燃易爆品进入场馆，避免造成人员伤亡。也请不要带入食物和水。</p>
+                <p><span class="notice-speaker">2.1</span> 特地要说明的是，现在越南当地天气炎热，请不要携带灯牌魔改棒等发光物，避免过热造成火灾。不要攜帶易碎品進入場館，不要带头灯恶意照射他人，也请不要携带三脚架及摄像机等录音录像设备，避免遮盖他人视线。</p>
+                <p><span class="notice-speaker">E:3</span> 为了保证演出效果，在舞台下方会设立激光灯，内场前排观众请不要舞台太近，以免受伤。</p>
+                <p><span class="notice-speaker">B:4</span> 演唱会期间不设立中控，但是请不要携带成员的个人应援物进场，请不要携带非Outof5成员的应援物进场，请不要主动携带代表色相关物件表现粉籍，避免发生粉丝群体间争执。</p>
+                <p><span class="notice-speaker">E:5</span> 本次演出座位随价格分区随机发放，请不要换座，请不要换座。避免出现入场出场时的场馆混乱。</p>
+                <p><span class="notice-speaker">6</span> 演唱会期间请不要录像，因为场馆较黑，尽量不要看手机，请沉浸式观演，避免影响他人观演质量。</p>
+                <p><span class="notice-speaker">7</span> 演出时可能会有气球等装饰物，但是请不要抬头，我们将会在气球飞到顶部时统一收纳，我们正在训练如何使其避免被激光照射，避免造成破裂对您进行惊扰。</p>
+                <p><span class="notice-speaker">D:8</span> 由于过于激动，成员也许会在表演或致词时出现小幅度的情绪波动，请专注演出，也请您不要携带饭撒牌等容易激发成员情绪波动的物品，每位成员的演出都不容易，请不要对任何一位成员表现anti。</p>
+                <p><span class="notice-speaker">E:9</span> 为了照顾当地观众，成员也许会在巡演时说一些当地语言，请不要对此感到惊讶，必要时成员会对此进行转译，不会让您缺失演出的精彩内容。</p>
+                <p><span class="notice-speaker">D:10</span> 不要因为特殊情况干扰演出秩序，不要相信任何谣言，请永远站在Outof5的五位成员身边。</p>
+                <p><span class="notice-speaker">B:11</span> 有什么突发状况请及时上报工作人员，请保持镇静，妥善处理，以免影响成员情绪，干扰演出秩序。</p>
+                <p><span class="notice-speaker">B/D/E 12</span> 这次会有你从来看不到的内容！请相信Outof5。</p>
+            </div>
+        </div>
+    </div>
+    <!-- 场景：博客完整版 · Sanger怎么发音？ -->
+<div class="scene" id="scene-blog-sanger-full">
+    <div class="blog-block" style="margin-bottom:0;">
+        <button class="read-more back" onclick="goto('scene-blog')">‹ 返回博客</button>
+        <span class="category-tag">博客</span>
+        <div class="blog-source">Outof5官方</div>
+        <h2 class="blog-title">Sanger怎么发音？</h2>
+
+        <div class="notice-list">
+            <p>作为由Outof5成员A在2021年就敲定的团粉丝名，Sanger的灵感来源，据他所言是德语的歌手(Sänger)一词。他希望粉丝不仅仅是作为表演的旁观者，也用自己的方式可以参与到团体的表现中，例如在演唱会中常常出现的小声跟唱，他表示对此十分高兴。</p>
+            <p>“事实上，粉丝和歌唱就是我们全部的生活啊。”A表示。</p>
+            <p>Sanger这个词同时在英语国家作为姓氏存在，发音类似于“桑格”，但是据男团成员共同商议，他们希望粉丝名的发音接近于一个生造词，以避免在欧美巡演时造成的歧义。他们最后选择了更接近于韩语中心动(설레)一词的sonle作为发音。</p>
+            <p>而在中文语境下，应粉丝的呼吁，希望能选择一个同样的双音节词，作为中文粉丝名，最后选定的是，两个字均作为草木义的“桑艻”一词，尽管与标准发音sonle有所差异，事实上也是有考虑到各地罗马音的区别，但是作为中国人的成员仍然对此表示，会对当地粉丝保持相当的尊重，对中文粉丝名表示同等的重视，对“桑艻”一词同样敏感。</p>
+        </div>
+    </div>
+</div>
+<!-- 场景：新闻总页 -->
+<div class="scene" id="scene-news">
+    <div class="news-block" style="margin-bottom:0;">
+        <span class="category-tag">新闻</span>
+
+        <div class="news-date">2023 / 1 / 17</div>
+        <h1 class="news-title">专访Outof5概念，宇宙尺度与私人触感。</h1>
+        <div class="news-source">by 字方</div>
+
+        <div class="dialogue">
+            <p>男团概念可以是什么样子？作为最近引发热议的新人中国男团的Outof5，中文团名除五外，给出了新的答案。</p>
+        </div>
+        <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
+    </div>
+</div>
+<!-- 场景：新闻完整版 -->
+<div class="scene" id="scene-news-full">
+    <div class="news-block" style="margin-bottom:0;">
+        <button class="read-more back" onclick="goto('scene-news')">‹ 返回新闻</button>
+        <span class="category-tag">新闻</span>
+
+        <div class="news-date">2023 / 1 / 17</div>
+        <h1 class="news-title">专访Outof5概念，宇宙尺度与私人触感。</h1>
+        <div class="news-source">by 字方</div>
+
+        <div class="dialogue">
+            <p>男团概念可以是什么样子？作为最近引发热议的新人中国男团的Outof5，中文团名除五外，给出了新的答案。</p>
+            <p>“我们该如何抵御迷惘。”在不到一年的出道时间内，Outof5的成员必须要适应如何更好地在大众面前表现。成员C坦言，从更为私密的练习生生涯中到现在作为公众偶像被大家所看到，他因为受宠若惊而感到怅然若失，亲密感仍然是偶像和粉丝需要共同面对的议题。</p>
+            <p>这似乎与他们的团队概念相吻合，Outof5的五位成员在概念中是在宇宙大爆炸后没有被观测到的已知物。他们在猜测宇宙中除了起伏的恒星外，是否在人类产生之前就已经有了现在被称作太空垃圾我们以为是人造物的产品，却早已存在，或许只是当时无法在地球环境上自然合成的物品，已经飘到了河外星系。</p>
+            <p>成员B的概念是纱布，他表示自己很喜欢这个词所携带的医疗系联想，喜欢纱布因为疏织在贴近皮肤时，反倒造成的异物感，前段时间在亚马逊森林的外务让他对这一点有了更深的感触，也成为了《耐心》这支即将回归的曲目的灵感来源。“如果是对宇宙的浩大尺度，纱布究竟有什么意义，宇宙的伤痕是什么？”面对没有回应的宇宙，而他能做的只是与同样四下无人的成员和粉丝群体Sanger创造意义。</p>
+            <p>希望用回忆将宇宙填满，也将Outof5这个团队填满。因为团队作为太空，从一片漆黑中，随成员和粉丝创造新的故事。成员说，如果要给团队也找一种介质，Outof5就是一种混沌态，黏稠绵长的物质。</p>
+            <p>但这样似乎也预示着前路的未知，成员坦言因为与首专风格差距过大，很难预测新专的成绩。酸性摇滚的尝试中，也并不知道是否会吸引喜欢新的音乐类型的粉丝。“我们五个并不是互相吸引的关系，并不相对，也并不稳定。我们只是漂浮，在探索前路，团队还有很长的路要走，也许在这一路上会出现诸多团队变动，但Outof5 永远是Outof5。”</p>
+        </div>
+    </div>
+</div>
+<!-- 场景：音乐与图表 -->
+<div class="scene" id="scene-music">
+    <h2 class="music-heading">音乐与图表</h2>
+    <div class="sort-indicator">
+            <span class="arrow-down"></span>
+        </span>
+        <span class="sort-label">时间倒序</span>
+    </div>
+
+    <!-- 专辑：除数 -->
+    <div class="album" draggable="true"data-album="divisor">
+        <button class="album-toggle" onclick="toggleAlbum(this)">
+            <span class="album-name">《除数》</span>
+            <span class="album-arrow"></span>
+        </button>
+        <div class="album-songs">
+            <span class="song-link" onclick="openSong('铝色')">《铝色》</span>
+            <span class="song-disabled">《九面体》</span>
+            <span class="song-disabled">《中欧海滩》</span>
+            <span class="song-disabled">《玻璃纤维》</span>
+            <span class="song-disabled">《Unwillkürlich》</span>
+            <span class="song-disabled">《2022》</span>
+            <span class="song-link" onclick="openSong('从深中来')">《从深中来》</span>
+        </div>
+    </div>
+
+    <!-- 专辑：aftermath -->
+    <div class="album" draggable="true" data-album="aftermath">
+        <button class="album-toggle" onclick="toggleAlbum(this)">
+            <span class="album-name">《aftermath》</span>
+            <span class="album-arrow"></span>
+        </button>
+        <div class="album-songs">
+            <span class="song-disabled">《意外之喜》</span>
+            <span class="song-link" onclick="openSong('继续，然后永远')">《继续，然后永远》</span>
+            <span class="song-disabled">《谵妄》</span>
+            <span class="song-disabled">《강령》</span>
+            <span class="song-disabled">《A water pipe》</span>
+            <span class="song-disabled">《What you to do is》</span>
+        </div>
+    </div>
+
+    <!-- 专辑：森森 -->
+    <div class="album" draggable="true"data-album="forest">
+        <button class="album-toggle" onclick="toggleAlbum(this)">
+            <span class="album-name">《森森》</span>
+            <span class="album-arrow"></span>
+        </button>
+        <div class="album-songs">
+            <span class="song-disabled">《奥斯汀切花》</span>
+            <span class="song-disabled">《槡树》</span>
+            <span class="song-disabled">《香草荚与香樟丸》</span>
+            <span class="song-disabled">《奥特古碱》</span>
+            <span class="song-disabled">《耐心》</span>
+            <span class="song-link" onclick="openSong('也许之前在班加罗尔')">《也许之前在班加罗尔》</span>
+            <span class="song-disabled">《날아가다》</span>
+            <span class="song-disabled">《四幕戏》</span>
+        </div>
+    </div>
+
+    <!-- 专辑：熵变 -->
+    <div class="album" draggable="true" data-album="entropy">
+        <button class="album-toggle" onclick="toggleAlbum(this)">
+            <span class="album-name">《熵变》</span>
+            <span class="album-arrow"></span>
+        </button>
+        <div class="album-songs">
+            <span class="song-link" onclick="openSong('十二万亿')">《十二万亿》</span>
+            <span class="song-disabled">《Galaxies never seen before》</span>
+            <span class="song-disabled">《水冰云层》</span>
+            <span class="song-disabled">《与光同尘》</span>
+            <span class="song-disabled">《昨日折叠》</span>
+            <span class="song-link" onclick="openSong('楼梯是畸形的')">《楼梯是畸形的》</span>
+        </div>
+    </div>
+</div>
+<!-- 场景：单曲页面 -->
+<div class="scene" id="scene-song-placeholder">
+    <h2 class="song-page-title" id="songPageTitle">单曲</h2>
+
+    <!-- 三个按钮始终保留 -->
+    <div class="song-actions">
+        <button class="song-action-btn" onclick="showSongPanel('performance')">表演</button>
+        <button class="song-action-btn" onclick="showSongPanel('history')">历史</button>
+
+        <div class="artist-dropdown">
+            <button class="song-action-btn artist-toggle" id="artistToggle" onclick="toggleArtistDropdown(event)">
+                演艺人员
+                <span class="artist-arrow"></span>
+            </button>
+            <div class="artist-menu" id="artistMenu">
+                <button class="artist-menu-item" onclick="selectArtist('A')">A</button>
+                <button class="artist-menu-item" onclick="selectArtist('B')">B</button>
+                <button class="artist-menu-item" onclick="selectArtist('C')">C</button>
+                <button class="artist-menu-item" onclick="selectArtist('D')">D</button>
+                <button class="artist-menu-item" onclick="selectArtist('E')">E</button>
+                <button class="artist-menu-item" onclick="selectArtist('all')">all</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 内容区，点哪个按钮就在这里显示对应内容 -->
+    <div class="song-panel" id="songPanel"></div>
+</div>
+    <!-- 占位场景 -->
+    <div class="scene placeholder-scene" id="scene-placeholder">
+        <h2 id="placeholderTitle">页面建设中</h2>
+        <p id="placeholderDesc">该内容暂未开放，敬请期待。</p>
+        <button class="menu-item" style="margin-top:24px;display:inline-block;width:auto;padding:10px 24px;border:1px solid #d2d2d7;border-radius:8px;" onclick="navigate('home')">返回首页</button>
+    </div>
+<div class="scene" id="scene-members">
+    <h2 class="music-heading">成员</h2>
+    <div class="member-grid" id="memberGrid"></div>
+
+    <div class="member-footer">
+        <div class="member-footer-line">
+            <span class="member-footer-url">Outof5.com</span>网址:Outof5.html#members=5 是偶像团体Outof5的官方网站，为Sanger运营。
+        </div>
+        <div class="member-footer-copy">©2022-2026</div>
+    </div>
+</div>
+    <!-- 场景：论坛（含粉丝检查） -->
+<div class="scene" id="scene-forum">
+    <!-- 粉丝检查 -->
+    <div class="check-panel" id="checkPanel">
+        <h2 class="check-title">粉丝检查</h2>
+
+        <div class="check-box">
+            <div class="check-box-left">
+                <span class="check-icon"></span>
+                <span class="check-box-text">请完成验证</span>
+            </div>
+            <div class="check-box-right">
+                <span class="check-box-brand">Outof5</span>
+                <span class="check-box-sub">答案均为双音节词语</span>
+            </div>
+        </div>
+
+        <div class="check-fields">
+            <div class="check-question">
+                <label class="check-label">1. Outof5的中文粉丝名是什么？</label>
+                <input type="text" class="check-input" id="checkInput1" placeholder="答案" autocomplete="off">
+            </div>
+
+            <div class="check-question">
+                <label class="check-label">2. Outof5的团应援色是什么？</label>
+                <input type="text" class="check-input" id="checkInput2" placeholder="答案" autocomplete="off">
+            </div>
+
+            <button class="check-submit" onclick="checkAnswers()">确认</button>
+        </div>
+
+        <div class="check-feedback" id="checkFeedback"></div>
+    </div>
+
+    <div class="forum-content" id="forumContent" style="display:none;">
+    <button class="forum-pin" onclick="goto('scene-forum-thread')">
+        <span class="pin-badge">置顶</span>
+        <span class="pin-title">2026年官方门票交易/出售/求购专帖</span>
+        <span class="pin-meta">2026/10/15 · by Outof.com</span>
+    </button>
+
+    <button class="forum-pin" onclick="goto('scene-forum-thread-2')">
+        
+        <span class="pin-title">好喜欢最近的一套单曲碟</span>
+        <span class="pin-meta">2026/7/13 · by 除了你就没有别人</span>
+    </button>
+
+    <button class="forum-pin" onclick="goto('scene-forum-thread-3')">
+        
+        <span class="pin-title">网站的默认密码是什么？</span>
+        <span class="pin-meta">2026/2/12 · by 下雨天有多远</span>
+    </button>
+
+    <div class="forum-login-hint" id="forumLoginHint">
+    <a href="javascript:void(0)" onclick="openLoginModal()">登录</a> 以查看更多
+</div>
+</div>
+</div>
+
+<!-- 场景：论坛帖子详情 -->
+<div class="scene" id="scene-forum-thread">
+    <button class="read-more back" onclick="goto('scene-forum')">‹ 返回论坛</button>
+
+    <div class="forum-pin-detail">
+        <span class="pin-badge">置顶</span>
+        <h2 class="pin-title">2026年官方门票交易/出售/求购专帖</h2>
+        <div class="pin-meta">2026/10/15 · by Outof.com</div>
+
+        <div class="forum-thread" id="forumThread">
+            <div class="forum-floor">
+                <div class="floor-user">ihophy</div>
+                <div class="floor-content">
+                    <p>诶，今年终于开帖了，在看到博客后，我本来以为不会开了耶。</p>
+                    <p>所以说，只要依票落座，开场前换票是可以的吗？</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">我再等一会</div>
+                <div class="floor-content">
+                    <p>出两张除的10/17越南站的380看台票，原价出，越南太远了就不去了。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">有什么事是你有关的</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@我再等一会</span> 越南站还远诶？看了打歌综艺，下一站大概不在亚洲。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">Караме1</div>
+                <div class="floor-content">
+                    <p>也没必要着急吧，越南站票很好抢，现在还有余售啊。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">minh.tuan</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@Караме1</span> <span class="translate-target">Vậy thì tốt quá rồi.Mình là fan ở Việt Nam, cho mình hỏi mua vé như thế nào ạ?</span></p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">Караме1</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@minh.tuan</span> Outof5官网就是这个，有售诶，记得登录，Ticketbox也有售。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">谁害怕弗</div>
+                <div class="floor-content">
+                    <p>有没有人换一张除的内场后排给我，我在左侧看台，可以补差。这次不要求人证合一吗？可以飞证。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">为老公换了情头</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@谁害怕弗</span> 已经私信你了。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">记得回来打歌啊</div>
+                <div class="floor-content">
+                    <p>还有人不进场吗？我看今天体育馆外面也挺热闹的。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">你别皱眉</div>
+                <div class="floor-content">
+                    <p>上面说中了诶，看发言下一站选在美洲吧，怎么还不发预约表？</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">Omo</div>
+                <div class="floor-content">
+                    <p>这不是回归巡演吗？Ｔ▽Ｔ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 场景：论坛帖子详情 · 好喜欢最近的一套单曲碟 -->
+<div class="scene" id="scene-forum-thread-2">
+    <button class="read-more back" onclick="goto('scene-forum')">‹ 返回论坛</button>
+
+    <div class="forum-pin-detail">
+        
+        <h2 class="pin-title">好喜欢最近的一套单曲碟</h2>
+        <div class="pin-meta">2026/7/13 · by 除了你就没有别人</div>
+
+        <div class="forum-thread">
+            <div class="forum-floor">
+                <div class="floor-user">除了你就没有别人</div>
+                <div class="floor-content">
+                    <p>终于有有关回归的利好消息了！这次回归专辑的先行曲《黑洞坍缩》居然出了单曲碟来收割Sanger呀，不过彩胶真的好漂亮，好高兴耶，还有随机的双人小卡。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">Vin</div>
+                <div class="floor-content">
+                    <p>这是我个人认为Outof5最好的作品吧，我已经严肃买了新的唱针，新专是科幻哲学主题？究竟什么时候所思上可以官宣呀。要是不回归，再虚晃一枪，我真的不知道怎么办了。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">OBibb</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@除了你就没有别人</span> 你怎么发货那么快？小卡大概是什么时候拍的呀？</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">除了你就没有别人</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@OBibb</span> 好消息应该是空白期吧，从来没有见过的一套图，偏镭射材质的套装，已经完全是团队概念了。卡背写了一些非人语言，然后这支单曲好像不进入新专吧。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">海折射了极光</div>
+                <div class="floor-content">
+                    <p>单曲碟怎么是唱片啊？我家里没有黑胶机，好不容易得到了优惠和特权码，感觉好可惜，有人要登我的号买吗，刚重置了密码。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">浮光掠影</div>
+                <div class="floor-content">
+                    <p>我完全能明白，彩胶上面的光斑完全是仿照宇宙质地，唱片封套上有关除的概念化也给我一种终于抓住你们了的感觉。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">在宇宙之外哪里还能找到你</div>
+                <div class="floor-content">
+                    <p>新专终于开启预约了。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 场景：论坛帖子详情 · 网站的默认密码是什么？ -->
+<div class="scene" id="scene-forum-thread-3">
+    <button class="read-more back" onclick="goto('scene-forum')">‹ 返回论坛</button>
+
+    <div class="forum-pin-detail">
+        
+        <h2 class="pin-title">网站的默认密码是什么？</h2>
+        <div class="pin-meta">2026/2/12 · by 下雨天有多远</div>
+
+        <div class="forum-thread">
+            <div class="forum-floor">
+                <div class="floor-user">下雨天有多远</div>
+                <div class="floor-content">
+                    <p>刚刚忘记密码之后用了验证码，重新登录之后好像说重置为默认密码了，但是我忘记重新设置了，这个网站的默认密码是什么啊？</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">过个两三年</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@下雨天有多远</span> 你指的就是这个Outof5官网吗，是Outof5的花名和出道年份。</p>
+                </div>
+            </div>
+
+            <div class="forum-floor">
+                <div class="floor-user">下雨天有多远</div>
+                <div class="floor-content">
+                    <p><span class="floor-reply">@过个两三年</span> 我明白了，我已经改成我自己的密码了。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 登录弹窗 -->
+<div class="login-modal-overlay" id="loginModalOverlay" onclick="closeLoginModal()">
+    <div class="login-modal" onclick="event.stopPropagation()">
+        <div class="login-modal-titlebar">
+            <span>登录到Outof5.com </span>
+            <button class="login-modal-close" onclick="closeLoginModal()">×</button>
+        </div>
+
+            <div class="login-modal-fields">
+                <div class="login-modal-field">
+                    <label>用户名：</label>
+                    <input type="text" id="loginUser" autocomplete="off">
+                </div>
+                <div class="login-modal-field">
+                    <label>密码：</label>
+                    <input type="password" id="loginPass" autocomplete="off">
+                </div>
+                <div class="login-modal-note">你好，Sanger。</div>
+    </div>
+
+    <div class="login-modal-footer">
+        <div class="login-modal-feedback" id="loginFeedback"></div>
+        <div class="login-modal-buttons">
+            <button class="btn-cancel" onclick="closeLoginModal()">取消</button>
+            <button class="btn-ok" onclick="submitLogin()">确定</button>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    </div>
+</div>
+
+</main>
+
+<script>
+    /* ============================================================
+       状态
+       ============================================================ */
+    const state = {
+    menuOpen: false,
+    communityOpen: false,
+    currentPage: 'home',
+    forumVerified: false,
+    loggedIn: false
+};
+    /* ============================================================
+   单曲数据
+   ============================================================ */
+const SONG_DATA = {
+    '铝色': {
+        performance: '《铝色》这首歌在Outof5的现场版中共表演了8次，5国6个城市，表演最多的一年是2023年。',
+        history: '《铝色》这首由B创作于2021年末的歌曲，据他所说，灵感来源却是源自自己的校友聚会，但是这件事情是从别人口中得知，因为没有人通知他去。\n\n写于他知道自己不会去的一个休息日，但是他并没有安息，“被用于结算的证书”，不会被结算的一个休息日，因为他当时呆在家中，令人感到畏忌的空白期，因为他当时对出道这种事情还琢磨不透，“不过现在没事”。',
+        artists: {
+            A: '《铝色》似乎从未由A现场表演过。',
+            B: '《铝色》在中国浙江等6个城市被B现场表演。',
+            C: '《铝色》似乎从未由C现场演奏过。',
+            D: '《铝色》在中国浙江等6个城市被D现场表演。',
+            E: '《铝色》在中国浙江等5个城市被E现场表演。'
+        }
+    },
+    '从深中来': {
+        performance: '《从深中来》这首歌在Outof5的现场版中共表演了19次，8国11个城市，表演最多的一年是2023年。',
+        history: '《从深中来》是Outof5成员最喜欢作为开场曲目的歌曲，成曲于2022年初，在2024年时候进行了更重新编舞及编曲，使其更侧重于舞蹈方面的展示。《从深中来》是齐舞曲目，无特殊缘故是全部成员上场。\n\n《从深中来》灵感来源是开场的时候舞台灯打在成员上的刺激感，而开场前最后的备场，在黑暗中的成员，实际上还并不清楚现场氛围，只能通过声音勉强揣摩，与象征着团应援色的黑色，与团概念相关的混沌相契合。歌曲前半部分使用了大量不协和音程，编舞偏向现代舞风格，后面半段更接近于传统的偶像团体舞蹈，强调多人整齐划一，编曲风格也更接近于美式流行。',
+        artists: {
+            A: '《从深中来》在南非开普敦等11个城市被A现场表演。',
+            B: '《从深中来》在南非开普敦等8个城市被B现场表演。',
+            C: '《从深中来》在南非开普敦等11个城市被C现场表演。',
+            D: '《从深中来》在南非开普敦等8个城市被D现场表演。',
+            E: '《从深中来》在美国底特律等9个城市被E现场表演。'
+        }
+    },
+    '继续，然后永远': {
+        performance: '《继续，然后永远》这首歌在Outof5的现场版中共表演了3次，3国3个城市，表演最多的一年是2025年。',
+        history: '《继续，然后永远》这首歌成曲于2025年初。灵感来源是成员的一个梦境，他梦到自己在一条小径上向前走，他可以停，但也许还是会继续，就好像这是你的命运，在编曲里他使用了弦乐泛音来表现梦境中清冷朦胧的感受。包括一句之前的口号，在两年后被重新提起，Outof5永远是Outof5，在相互作用下，团体在成员心中变得无可动摇。\n\n《继续，然后永远》在成员的共同商议后，他们仍然希望能在其中表现与Sanger一同走下去的决心，因为偶像生涯就像是一种命运，他们希望自己能在这种不可抗力下表现得更好。',
+        artists: {
+            A: '《继续，然后永远》在法国巴黎等3个城市被A现场表演。',
+            B: '《继续，然后永远》在法国巴黎等3个城市被B现场表演。',
+            C: '《继续，然后永远》在法国巴黎等3个城市被C现场表演。',
+            D: '《继续，然后永远》在法国巴黎等2个城市被D现场表演。',
+            E: '《继续，然后永远》在法国巴黎等3个城市被E现场表演。'
+        }
+    },
+    '也许之前在班加罗尔': {
+        performance: '《也许之前在班加罗尔》这首歌在Outof5的现场版中共表演了6次，3国5个城市，表演最多的一年是2023年。',
+        history: '《也许之前在班加罗尔》的灵感来源是成员C在采访中被问及最想去的城市是什么？他说是班加罗尔，但事实上他自己从未去过这里。希望在这首曲目中能表现成员们对于未曾涉足过不曾观测的地区的浪漫化怀念和想象，包括想要去更多地方巡演的美好展望。\n\n在这首歌里，成员提及了并结合了一些班加罗尔的代表性事物，想象了一个指引他们完成旅行的当地人，希望如果要去的话能交到更多朋友吧。',
+        artists: {
+            A: '《也许之前在班加罗尔》在美国底特律等2个城市被A现场表演。',
+            B: '《也许之前在班加罗尔》似乎从未由B现场演奏过。',
+            C: '《也许之前在班加罗尔》在印度加尔各达等5个城市被C现场表演。',
+            D: '《也许之前在班加罗尔》在美国底特律等2个城市被D现场表演。',
+            E: '《也许之前在班加罗尔》似乎从未由E现场演奏过。'
+        }
+    },
+    '十二万亿': {
+        performance: '《十二万亿》这首歌在Outof5的现场版中共表演了1次，1国1个城市，表演最多的一年是2026年。',
+        history: '《十二万亿》歌名的来源是物理学中的庞加莱回归定理，意思是在极漫长的时间尺度下，宇宙的粒子将重新结合形成，也许在浩大尺度中，我们还会再相见，与先行曲所结合的宇宙收缩理论和团队概念形成了照应关系。这首歌主要由B和D填词，他们两个希望能在其中表现团队的恒常性。\n\n“你还可以继续看着我的眼睛”在这种情况下，他们认为相遇相聚也许并不是一个短暂的契机，如果经历不可计数的分离，就会有不可计数的相聚。',
+        artists: {
+            A: '《十二万亿》似乎从未由A现场演奏过。',
+            B: '《十二万亿》在越南胡志明市等1个城市被B现场表演。',
+            C: '《十二万亿》似乎从未由C现场演奏过。',
+            D: '《十二万亿》似乎从未由D现场演奏过。',
+            E: '《十二万亿》似乎从未由E现场演奏过。'
+        }
+    },
+    '楼梯是畸形的': {
+        performance: '《楼梯是畸形的》这首歌在Outof5的现场版中从未被表演过。',
+        history: '《楼梯是畸形的》这首歌的灵感来源有一部分是来自于彭罗斯阶梯这个概念，另一部分其实是来自于成员的生活化感受，成员们作为不同的物质，或许仍然需要在宇宙中借助类似于楼梯的物质攀岩上升，去进行与其他物质的交换融洽。\n\n“我们一定需要通过某种介质，才存在于和对方同样的世界里”楼梯是我们可以碰到其他物质的一个通道的具象化，无论是提供视角还是支具，令我们在其中与他人相遇。',
+        artists: {
+            A: '《楼梯是畸形的》似乎从未由A现场演奏过。',
+            B: '《楼梯是畸形的》似乎从未由B现场演奏过。',
+            C: '《楼梯是畸形的》似乎从未由C现场演奏过。',
+            D: '《楼梯是畸形的》似乎从未由D现场演奏过。',
+            E: '《楼梯是畸形的》似乎从未由E现场演奏过。'
+        }
+    }
+};
+
+// 当前打开的歌名
+let currentSongName = '';
+
+    /* ============================================================
+       菜单开关
+       ============================================================ */
+    function toggleMenu() {
+        state.menuOpen = !state.menuOpen;
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const toggle = document.getElementById('menuToggle');
+
+        if (state.menuOpen) {
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            toggle.classList.add('open');
+        } else {
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            toggle.classList.remove('open');
+        }
+    }
+
+    function closeMenu() {
+        if (!state.menuOpen) return;
+        state.menuOpen = false;
+        document.getElementById('drawer').classList.remove('open');
+        document.getElementById('drawerOverlay').classList.remove('open');
+        document.getElementById('menuToggle').classList.remove('open');
+    }
+
+    /* ============================================================
+       社区折叠
+       ============================================================ */
+    function toggleCommunity() {
+        state.communityOpen = !state.communityOpen;
+        const children = document.getElementById('communityChildren');
+        const toggle = document.getElementById('communityToggle');
+
+        if (state.communityOpen) {
+            children.classList.add('open');
+            toggle.classList.add('open');
+        } else {
+            children.classList.remove('open');
+            toggle.classList.remove('open');
+        }
+    }
+
+    /* ============================================================
+       场景切换
+       ============================================================ */
+    function goto(id) {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+
+    if (id === 'scene-forum-thread') {
+        renderForumThread();
+    }
+}
+
+    /* ============================================================
+       菜单导航
+       ============================================================ */
+    function navigate(page) {
+        closeMenu();
+
+        if (page === 'home') {
+            goto('scene-home');
+            state.currentPage = 'home';
+            return;
+        }
+
+        if (page === 'shows') {
+            goto('scene-shows');
+            state.currentPage = 'shows';
+            return;
+        }
+
+        if (page === 'blog') {
+            goto('scene-blog');
+            state.currentPage = 'blog';
+            return;
+        }
+        if (page === 'music') {
+            goto('scene-music');
+            state.currentPage = 'music';
+            return;
+        }
+        if (page === 'forum') {
+            goto('scene-forum');
+            state.currentPage = 'forum';
+            resetForum();
+            return;
+        }
+        if (page === 'news') {
+            goto('scene-news');
+            state.currentPage = 'news';
+            return;
+        }
+        if (page === 'members') {
+            goto('scene-members');
+            state.currentPage = 'members';
+            renderMemberGrid();
+            return;
+        }
+        if (page === 'contact') {
+    if (!state.loggedIn) {
+        // 未登录，不跳转，无提示
+        return;
+    }
+    goto('scene-placeholder');
+    state.currentPage = 'contact';
+    document.getElementById('placeholderTitle').textContent = '联系';
+    document.getElementById('placeholderDesc').textContent = '「联系」内容暂未开放，敬请期待。';
+    return;
+}
+
+        const titles = {
+            website: '所思账号',
+        };
+
+        const title = titles[page] || '页面建设中';
+        document.getElementById('placeholderTitle').textContent = title;
+        document.getElementById('placeholderDesc').textContent = '「' + title + '」内容暂未开放，敬请期待。';
+
+        goto('scene-placeholder');
+        state.currentPage = page;
+    }
+
+    /* ============================================================
+       节目单：选中替换 / 取消恢复
+       ============================================================ */
+    const REPLACEMENT_TEXT = '没有已知的节目单';
+
+    const ORIGINAL_LISTS = {
+        home1: `<span class="song">《从深中来》</span> <span class="arrow">&gt;</span>
+                <span class="song">《霓虹膜》</span> <span class="arrow">&gt;</span>
+                <span class="song">《Galaxies never seen before》</span> <span class="arrow">&gt;</span>
+                <span class="song">《sáng》</span> <span class="arrow">&gt;</span>
+                <span class="song">《与光同尘》</span>`,
+        home2: `<span class="song">《奥斯汀切花》</span> <span class="arrow">&gt;</span>
+                <span class="song">《玻璃纤维》</span><span class="footnote-mark">[1]</span> <span class="arrow">&gt;</span>
+                <span class="song">《날아가다》</span> <span class="arrow">&gt;</span>
+                <span class="song">《十二万亿》</span><span class="footnote-mark">[2]</span> <span class="arrow">&gt;</span>
+                <span class="song">《继续，然后永远》</span>`,
+        shows1: `<span class="song">《从深中来》</span> <span class="arrow">&gt;</span>
+                <span class="song">《霓虹膜》</span> <span class="arrow">&gt;</span>
+                <span class="song">《Galaxies never seen before》</span> <span class="arrow">&gt;</span>
+                <span class="song">《sáng》</span> <span class="arrow">&gt;</span>
+                <span class="song">《与光同尘》</span>`,
+        shows2: `<span class="song">《奥斯汀切花》</span> <span class="arrow">&gt;</span>
+                <span class="song">《玻璃纤维》</span><span class="footnote-mark">[1]</span> <span class="arrow">&gt;</span>
+                <span class="song">《날아가다》</span> <span class="arrow">&gt;</span>
+                <span class="song">《十二万亿》</span><span class="footnote-mark">[2]</span> <span class="arrow">&gt;</span>
+                <span class="song">《继续，然后永远》</span>`
+    };
+
+    const replacedGroups = new Set();
+
+    function replaceGroup(el) {
+        if (!el || replacedGroups.has(el.id)) return;
+        el.innerHTML = `<span class="song">${REPLACEMENT_TEXT}</span>`;
+        replacedGroups.add(el.id);
+
+        const sceneId = el.closest('.scene').id;
+        const footnoteId = sceneId === 'scene-home' ? 'homeFootnotes' : 'showsFootnotes';
+        const footnotes = document.getElementById(footnoteId);
+        if (footnotes) footnotes.style.display = 'none';
+    }
+
+    function restoreGroup(el) {
+        if (!el || !replacedGroups.has(el.id)) return;
+        const key = el.dataset.original;
+        if (ORIGINAL_LISTS[key]) {
+            el.innerHTML = ORIGINAL_LISTS[key];
+        }
+        replacedGroups.delete(el.id);
+
+        const sceneId = el.closest('.scene').id;
+        const footnoteId = sceneId === 'scene-home' ? 'homeFootnotes' : 'showsFootnotes';
+        const footnotes = document.getElementById(footnoteId);
+        const sceneGroups = sceneId === 'scene-home'
+            ? [document.getElementById('homeGroup1'), document.getElementById('homeGroup2')]
+            : [document.getElementById('showsGroup1'), document.getElementById('showsGroup2')];
+        const anyReplaced = sceneGroups.some(g => g && replacedGroups.has(g.id));
+        if (footnotes) footnotes.style.display = anyReplaced ? 'none' : '';
+    }
+
+    function groupIntersectsSelection(groupEl) {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return false;
+        if (selection.isCollapsed) return false;
+
+        const range = selection.getRangeAt(0);
+        const selectedText = selection.toString();
+
+        const songNames = [
+            '从深中来', '霓虹膜', 'Galaxies never seen before', 'sáng', '与光同尘',
+            '奥斯汀切花', '玻璃纤维', '날아가다', '十二万亿', '继续，然后永远'
+        ];
+
+        const groupText = groupEl.textContent;
+        if (songNames.some(name => selectedText.includes(name) && groupText.includes(name))) {
+            return true;
+        }
+
+        if (range.intersectsNode) {
+            try {
+                if (range.intersectsNode(groupEl)) return true;
+            } catch (e) {}
+        }
+
+        try {
+            if (range.isPointInRange(groupEl, 0) || range.isPointInRange(groupEl, groupEl.childNodes.length)) {
+                return true;
+            }
+        } catch (e) {}
+
+        return false;
+    }
+
+    function handleSelectionChange() {
+        const homeScene = document.getElementById('scene-home');
+        const showsScene = document.getElementById('scene-shows');
+
+        if (homeScene && homeScene.classList.contains('active')) {
+            const g1 = document.getElementById('homeGroup1');
+            const g2 = document.getElementById('homeGroup2');
+            if (g1) { groupIntersectsSelection(g1) ? replaceGroup(g1) : restoreGroup(g1); }
+            if (g2) { groupIntersectsSelection(g2) ? replaceGroup(g2) : restoreGroup(g2); }
+        }
+
+        if (showsScene && showsScene.classList.contains('active')) {
+            const g1 = document.getElementById('showsGroup1');
+            const g2 = document.getElementById('showsGroup2');
+            if (g1) { groupIntersectsSelection(g1) ? replaceGroup(g1) : restoreGroup(g1); }
+            if (g2) { groupIntersectsSelection(g2) ? replaceGroup(g2) : restoreGroup(g2); }
+        }
+    }
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    document.addEventListener('mouseup', function() { setTimeout(handleSelectionChange, 10); });
+    document.addEventListener('touchend', function() { setTimeout(handleSelectionChange, 10); });
+
+    /* ============================================================
+       键盘关闭
+       ============================================================ */
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && state.menuOpen) {
+            closeMenu();
+        }
+    });
+    function toggleAlbum(btn) {
+    btn.classList.toggle('open');
+    const songs = btn.nextElementSibling;
+    if (songs) songs.classList.toggle('open');
+}
+/* ============================================================
+   论坛 · 粉丝检查
+   ============================================================ */
+const FORUM_ANSWERS = ['桑艻', '黑色'];
+
+function resetForum() {
+    const panel = document.getElementById('checkPanel');
+    const content = document.getElementById('forumContent');
+    const input1 = document.getElementById('checkInput1');
+    const input2 = document.getElementById('checkInput2');
+    const feedback = document.getElementById('checkFeedback');
+    const loginHint = document.getElementById('forumLoginHint');
+
+    // 已登录就隐藏“登录以查看更多”
+    if (loginHint) {
+        loginHint.style.display = state.loggedIn ? 'none' : 'block';
+    }
+
+    // 如果已经验证过，直接显示帖子条目，跳过检查
+    if (state.forumVerified) {
+        if (panel) panel.style.display = 'none';
+        if (content) content.style.display = 'block';
+        return;
+    }
+
+    if (panel) panel.style.display = 'block';
+    if (content) content.style.display = 'none';
+    if (input1) input1.value = '';
+    if (input2) input2.value = '';
+    if (feedback) {
+        feedback.textContent = '';
+        feedback.className = 'check-feedback';
+    }
+}
+
+function checkAnswers() {
+    const input1 = document.getElementById('checkInput1');
+    const input2 = document.getElementById('checkInput2');
+    const feedback = document.getElementById('checkFeedback');
+    const panel = document.getElementById('checkPanel');
+    const content = document.getElementById('forumContent');
+
+    const a1 = input1.value.trim();
+    const a2 = input2.value.trim();
+
+    // 两个都填了才判断
+    if (!a1 || !a2) {
+        feedback.textContent = '请把两个问题都填完再确认。';
+        feedback.className = 'check-feedback err';
+        return;
+    }
+
+    if (a1 === FORUM_ANSWERS[0] && a2 === FORUM_ANSWERS[1]) {
+    // 正确
+    feedback.textContent = '验证成功，等待Outof5.com响应……';
+    feedback.className = 'check-feedback ok';
+
+    // 标记已验证
+    state.forumVerified = true;
+
+    // 短暂延迟后进入论坛
+    setTimeout(function() {
+        panel.style.display = 'none';
+        content.style.display = 'block';
+        feedback.textContent = '';
+        feedback.className = 'check-feedback';
+    }, 1200);
+}
+     else {
+        // 错误：提示并重置
+        feedback.textContent = '验证失败，请重新回答。';
+        feedback.className = 'check-feedback err';
+
+        setTimeout(function() {
+            resetForum();
+        }, 1200);
+    }
+}
+
+/* ============================================================
+   音乐与图表 · 专辑拖动排序（桌面 + 手机）+ 顺序判定
+   ============================================================ */
+(function() {
+    let dragSource = null;
+    let sortLocked = false;
+    let correctTimer = null;
+
+    const CORRECT_ORDER = ['entropy', 'aftermath', 'forest', 'divisor'];
+
+    function getAlbums() {
+        const scene = document.getElementById('scene-music');
+        if (!scene) return [];
+        return Array.from(scene.querySelectorAll('.album'));
+    }
+
+    function checkAlbumOrder() {
+        if (sortLocked) return;
+
+        const albums = getAlbums();
+        const order = albums.map(a => a.dataset.album);
+
+        const isCorrect = order.length === CORRECT_ORDER.length &&
+            order.every((v, i) => v === CORRECT_ORDER[i]);
+
+        if (isCorrect) {
+            // 顺序正确，启动计时器；如果期间又被拖动，会先清掉
+            clearTimeout(correctTimer);
+            correctTimer = setTimeout(function() {
+                lockSort();
+            }, 1000);
+        } else {
+            // 顺序不对，取消计时
+            clearTimeout(correctTimer);
+            correctTimer = null;
+        }
+    }
+
+    function lockSort() {
+        if (sortLocked) return;
+        sortLocked = true;
+
+        const albums = getAlbums();
+        albums.forEach(a => {
+            a.classList.add('correct-flash');
+            // 动画结束后加 locked 类
+            a.addEventListener('animationend', function() {
+                a.classList.remove('correct-flash');
+                a.classList.add('locked');
+            }, { once: true });
+        });
+
+        // 安全兜底：1.5 秒后无论动画有没有结束都锁上
+        setTimeout(function() {
+            albums.forEach(a => {
+                a.classList.remove('correct-flash');
+                a.classList.add('locked');
+            });
+        }, 1500);
+    }
+
+    function bindAlbums() {
+        const albums = getAlbums();
+        albums.forEach(album => {
+            if (album.dataset.dragBound === '1') return;
+            album.dataset.dragBound = '1';
+
+            /* ---------- 桌面端 HTML5 拖动 ---------- */
+            album.addEventListener('dragstart', function(e) {
+                if (sortLocked) {
+                    e.preventDefault();
+                    return;
+                }
+                dragSource = album;
+                album.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', '');
+            });
+
+            album.addEventListener('dragend', function() {
+                album.classList.remove('dragging');
+                getAlbums().forEach(a => a.classList.remove('drag-over'));
+                dragSource = null;
+                checkAlbumOrder();
+            });
+
+            album.addEventListener('dragover', function(e) {
+                if (sortLocked) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (!dragSource || dragSource === album) return;
+
+                const rect = album.getBoundingClientRect();
+                const midY = rect.top + rect.height / 2;
+                const after = e.clientY > midY;
+
+                getAlbums().forEach(a => a.classList.remove('drag-over'));
+                album.classList.add('drag-over');
+
+                const parent = album.parentNode;
+                if (after) {
+                    parent.insertBefore(dragSource, album.nextSibling);
+                } else {
+                    parent.insertBefore(dragSource, album);
+                }
+            });
+
+            album.addEventListener('drop', function(e) {
+                e.preventDefault();
+                getAlbums().forEach(a => a.classList.remove('drag-over'));
+            });
+
+            /* ---------- 手机端触摸拖动 ---------- */
+            let touchEl = null;
+            let startY = 0;
+            let dragging = false;
+            let longPressTimer = null;
+
+            album.addEventListener('touchstart', function(e) {
+                if (sortLocked) return;
+                if (e.touches.length !== 1) return;
+
+                const touch = e.touches[0];
+                touchEl = album;
+                startY = touch.clientY;
+                dragging = false;
+
+                clearTimeout(longPressTimer);
+                longPressTimer = setTimeout(function() {
+                    if (!touchEl) return;
+                    dragging = true;
+                    touchEl.classList.add('dragging');
+                }, 150);
+            }, { passive: true });
+
+            album.addEventListener('touchmove', function(e) {
+                if (sortLocked || !touchEl) return;
+
+                const touch = e.touches[0];
+                const deltaY = touch.clientY - startY;
+
+                if (!dragging) {
+                    if (Math.abs(deltaY) > 8) {
+                        clearTimeout(longPressTimer);
+                        touchEl = null;
+                    }
+                    return;
+                }
+
+                e.preventDefault();
+
+                touchEl.style.transform = 'translateY(' + deltaY + 'px)';
+
+                const albums = getAlbums().filter(a => a !== touchEl);
+                const curY = touch.clientY;
+
+                albums.forEach(other => {
+                    const r = other.getBoundingClientRect();
+                    const mid = r.top + r.height / 2;
+
+                    if (curY < mid &&
+                        (touchEl.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_PRECEDING)) {
+                        other.parentNode.insertBefore(touchEl, other);
+                        startY = curY;
+                        touchEl.style.transform = '';
+                    } else if (curY > mid &&
+                        (touchEl.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+                        other.parentNode.insertBefore(touchEl, other.nextSibling);
+                        startY = curY;
+                        touchEl.style.transform = '';
+                    }
+                });
+            }, { passive: false });
+
+            function endTouch() {
+                clearTimeout(longPressTimer);
+                if (touchEl) {
+                    touchEl.style.transform = '';
+                    touchEl.classList.remove('dragging');
+                }
+                touchEl = null;
+                dragging = false;
+                checkAlbumOrder();
+            }
+
+            album.addEventListener('touchend', endTouch);
+            album.addEventListener('touchcancel', endTouch);
+        });
+    }
+
+    const originalGoto = window.goto;
+    window.goto = function(id) {
+        originalGoto(id);
+        if (id === 'scene-music') {
+            setTimeout(bindAlbums, 50);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(bindAlbums, 100);
+    });
+})();
+
+/* ============================================================
+   单曲页面
+   ============================================================ */
+function openSong(name) {
+    currentSongName = name;
+
+    const title = document.getElementById('songPageTitle');
+    if (title) title.textContent = '《' + name + '》';
+
+    const panel = document.getElementById('songPanel');
+    if (panel) panel.innerHTML = '';
+
+    const menu = document.getElementById('artistMenu');
+    const toggle = document.getElementById('artistToggle');
+    if (menu) menu.classList.remove('open');
+    if (toggle) toggle.classList.remove('open');
+
+    // 默认显示表演
+    showSongPanel('performance');
+
+    goto('scene-song-placeholder');
+}
+
+function showSongPanel(type) {
+    const panel = document.getElementById('songPanel');
+    if (!panel) return;
+
+    const data = SONG_DATA[currentSongName];
+    if (!data) {
+        panel.innerHTML = '<p>内容暂未开放，敬请期待。</p>';
+        return;
+    }
+
+    if (type === 'performance') {
+        panel.innerHTML = '<p>' + data.performance + '</p>';
+    } else if (type === 'history') {
+        // 支持换行，把 \n\n 换成两个 <p>
+        const paragraphs = data.history.split('\n\n').map(function(p) {
+            return '<p>' + p + '</p>';
+        }).join('');
+        panel.innerHTML = paragraphs;
+    }
+}
+
+function toggleArtistDropdown(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('artistMenu');
+    const toggle = document.getElementById('artistToggle');
+    if (!menu || !toggle) return;
+
+    menu.classList.toggle('open');
+    toggle.classList.toggle('open');
+}
+
+function selectArtist(who) {
+    const panel = document.getElementById('songPanel');
+    if (!panel) return;
+
+    const data = SONG_DATA[currentSongName];
+    if (!data) {
+        panel.innerHTML = '<p>内容暂未开放，敬请期待。</p>';
+    } else if (who === 'all') {
+        // all：只显示参与过这首歌表演的成员
+        const performed = [];
+        ['A', 'B', 'C', 'D', 'E'].forEach(function(m) {
+            const text = data.artists[m];
+            if (text && !text.includes('从未')) {
+                performed.push(m);
+            }
+        });
+        panel.innerHTML = '<p>参与过《' + currentSongName + '》现场表演的成员：' + performed.join('、') + '</p>';
+    } else {
+        // 具体成员：只显示该成员在这首歌里的内容
+        const text = data.artists[who];
+        panel.innerHTML = text ? '<p>' + text + '</p>' : '<p>暂无信息。</p>';
+    }
+
+    const menu = document.getElementById('artistMenu');
+    const toggle = document.getElementById('artistToggle');
+    if (menu) menu.classList.remove('open');
+    if (toggle) toggle.classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+    const dropdown = document.querySelector('.artist-dropdown');
+    if (dropdown && !dropdown.contains(e.target)) {
+        const menu = document.getElementById('artistMenu');
+        const toggle = document.getElementById('artistToggle');
+        if (menu) menu.classList.remove('open');
+        if (toggle) toggle.classList.remove('open');
+    }
+});
+/* ============================================================
+   论坛楼层 · 倒序排列 + 越南语翻译
+   ============================================================ */
+
+// 保存原始楼层顺序（正序）
+let forumFloorsOriginal = null;
+let forumReversed = false;
+
+function renderForumThread() {
+    if (forumReversed) return;
+    const thread = document.getElementById('forumThread');
+    if (!thread) return;
+
+    forumFloorsOriginal = Array.from(thread.children);
+    thread.innerHTML = '';
+    forumFloorsOriginal.slice().reverse().forEach(function(floor) {
+        thread.appendChild(floor);
+    });
+
+    forumReversed = true;
+}
+/* 越南语翻译逻辑 —— 选中时替换为中文 */
+(function() {
+    const ORIGINAL = 'Vậy thì tốt quá rồi.Mình là fan ở Việt Nam, cho mình hỏi mua vé như thế nào ạ?';
+    const TRANSLATED = '那真是太好了。我是越南的粉丝，请问该如何购买门票呢？';
+
+    let isTranslated = false;
+
+    function findTarget() {
+        return document.querySelector('.translate-target');
+    }
+
+    function translate() {
+        const el = findTarget();
+        if (!el || isTranslated) return;
+        el.textContent = TRANSLATED;
+        isTranslated = true;
+    }
+
+    function revert() {
+        const el = findTarget();
+        if (!el || !isTranslated) return;
+        el.textContent = ORIGINAL;
+        isTranslated = false;
+    }
+
+    function isTargetSelected() {
+        const el = findTarget();
+        if (!el) return false;
+
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return false;
+        if (selection.isCollapsed) return false;
+
+        const selectedText = selection.toString();
+        if (selectedText.includes(ORIGINAL) || selectedText.includes(TRANSLATED)) {
+            return true;
+        }
+
+        const range = selection.getRangeAt(0);
+        if (range.intersectsNode) {
+            try {
+                if (range.intersectsNode(el)) return true;
+            } catch (e) {}
+        }
+
+        return false;
+    }
+
+    function handle() {
+        // 只在论坛内容显示时生效
+        const content = document.getElementById('forumContent');
+        if (!content || content.style.display === 'none') return;
+
+        if (isTargetSelected()) {
+            translate();
+        } else {
+            revert();
+        }
+    }
+
+    document.addEventListener('selectionchange', handle);
+    document.addEventListener('mouseup', function() { setTimeout(handle, 10); });
+    document.addEventListener('touchend', function() { setTimeout(handle, 10); });
+})();
+/* ============================================================
+   登录弹窗
+   ============================================================ */
+const LOGIN_USER = '海折射了极光';
+const LOGIN_PASS = '除2022';
+
+function openLoginModal() {
+    const overlay = document.getElementById('loginModalOverlay');
+    const feedback = document.getElementById('loginFeedback');
+    const user = document.getElementById('loginUser');
+    const pass = document.getElementById('loginPass');
+
+    if (feedback) {
+        feedback.textContent = '';
+        feedback.className = 'login-modal-feedback';
+    }
+    if (user) user.value = '';
+    if (pass) pass.value = '';
+    if (overlay) overlay.classList.add('open');
+}
+
+function closeLoginModal() {
+    const overlay = document.getElementById('loginModalOverlay');
+    if (overlay) overlay.classList.remove('open');
+}
+
+function submitLogin() {
+    const user = document.getElementById('loginUser');
+    const pass = document.getElementById('loginPass');
+    const feedback = document.getElementById('loginFeedback');
+
+    const u = user ? user.value.trim() : '';
+    const p = pass ? pass.value.trim() : '';
+
+    if (!u || !p) {
+        feedback.textContent = '请把用户名和密码都填完再确认。';
+        feedback.className = 'login-modal-feedback err';
+        return;
+    }
+
+    if (u === LOGIN_USER && p === LOGIN_PASS) {
+    feedback.textContent = '欢迎海折射了极光！';
+    feedback.className = 'login-modal-feedback ok';
+
+    // 标记已登录
+    state.loggedIn = true;
+
+    // 立刻隐藏“登录以查看更多”
+    const loginHint = document.getElementById('forumLoginHint');
+    if (loginHint) loginHint.style.display = 'none';
+
+    setTimeout(function() {
+        closeLoginModal();
+    }, 1200);
+}
+
+     else {
+        feedback.textContent = '用户名或密码有误。';
+        feedback.className = 'login-modal-feedback err';
+    }
+}
+/* ============================================================
+   成员页 · URL hash 控制显示数量
+   ============================================================ */
+function getMemberCount() {
+    const hash = window.location.hash; // 例如 "#members=6"
+    const match = hash.match(/members=(\d+)/);
+    if (match) {
+        const n = parseInt(match[1], 10);
+        if (n === 6) return 6;
+    }
+    return 5;
+}
+
+function renderMemberGrid() {
+    const grid = document.getElementById('memberGrid');
+    if (!grid) return;
+
+    const count = getMemberCount();
+    grid.innerHTML = '';
+
+    for (let i = 0; i < count; i++) {
+        const card = document.createElement('div');
+        card.className = 'member-card';
+        grid.appendChild(card);
+    }
+}
+
+// 地址栏 hash 变化时，如果当前在成员页，就重新渲染
+window.addEventListener('hashchange', function() {
+    if (state.currentPage === 'members') {
+        renderMemberGrid();
+    }
+});
+
+</script>
+
+</body>
+</html>
