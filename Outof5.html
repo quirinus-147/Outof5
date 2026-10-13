@@ -1372,6 +1372,44 @@
     cursor: default;
     opacity: 1;
 }
+/* ===== 新闻术语点击展开 ===== */
+.term-toggle {
+    color: #0b3d2e;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+
+.term-toggle:hover {
+    opacity: 0.8;
+}
+
+.term-content {
+    display: none;
+    color: #86868b;
+    font-weight: 400;
+    margin-left: 2px;
+}
+
+.term-toggle.open .term-content {
+    display: inline;
+}
+
+/* 代表色句选中后固定替换，加上括号 */
+.color-translate {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.color-translate ::selection {
+    background: #3b6eff;
+    color: #ffffff;
+}
+
+.color-translate.replaced {
+    color: #0b3d2e;
+    font-weight: 600;
+}
     </style>
 </head>
 <body>
@@ -1418,7 +1456,24 @@
 <main class="main">
 
     <!-- 场景：首页 -->
+     
+
     <div class="scene active" id="scene-home">
+        <!-- 新闻简版：越南首站 -->
+<div class="news-block" style="margin-top:48px;">
+    <span class="category-tag">新闻</span>
+
+    <div class="news-date">2026 / 10 / 18</div>
+    <h1 class="news-title">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</h1>
+    <div class="news-source">by Báo Tin</div>
+
+    <div class="dialogue">
+        <p><span class="translate-target">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</span></p>
+        <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的场贩摊位<span class="term-toggle" onclick="toggleTerm(this)">quầy hàng<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
+    </div>
+    <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
+</div>
+
         <div class="setlist">
             <span class="category-tag">片单</span>
 
@@ -1490,19 +1545,7 @@
                 <div class="line"><span class="speaker">A：</span>你在单词本旁边标的原来是注音啊，不过很高兴在各个地方能看到你们！</div>
                 <div class="line"><span class="speaker">C：</span>把你自己的part都看好吧。</div>
             </div>
-            <!-- 新闻简版：专访Outof5概念 -->
-            <div class="news-block" style="margin-top:48px;">
-                <span class="category-tag">新闻</span>
-
-                <div class="news-date">2023 / 1 / 17</div>
-                <h1 class="news-title">专访Outof5概念，宇宙尺度与私人触感。</h1>
-                <div class="news-source">by 字方</div>
-
-                <div class="dialogue">
-                    <p>男团概念可以是什么样子？作为最近引发热议的新人中国男团的Outof5，中文团名除五外，给出了新的答案。</p>
-                </div>
-                <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
-            </div>
+        </div>
         </div>
     </div>
 
@@ -1617,21 +1660,60 @@
 </div>
 <!-- 场景：新闻总页 -->
 <div class="scene" id="scene-news">
-    <div class="news-block" style="margin-bottom:0;">
+
+    <!-- 新闻1：越南首站 -->
+    <div class="news-block">
         <span class="category-tag">新闻</span>
-
-        <div class="news-date">2023 / 1 / 17</div>
-        <h1 class="news-title">专访Outof5概念，宇宙尺度与私人触感。</h1>
-        <div class="news-source">by 字方</div>
-
+        <div class="news-date">2026 / 10 / 18</div>
+        <h1 class="news-title">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</h1>
+        <div class="news-source">by Báo Tin</div>
         <div class="dialogue">
-            <p>男团概念可以是什么样子？作为最近引发热议的新人中国男团的Outof5，中文团名除五外，给出了新的答案。</p>
+            <p><span class="translate-target">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</span></p>
+            <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的场贩摊位<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
         </div>
         <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
     </div>
+
+    <!-- 新闻2：专访 -->
+    <div class="news-block">
+        <span class="category-tag">新闻</span>
+        <div class="news-date">2023 / 1 / 17</div>
+        <h1 class="news-title">专访Outof5概念，宇宙尺度与私人触感。</h1>
+        <div class="news-source">by 字方</div>
+        <div class="dialogue">
+            <p>男团概念可以是什么样子？作为最近引发热议的新人中国男团的Outof5，中文团名除五外，给出了新的答案。</p>
+        </div>
+        <button class="read-more" onclick="goto('scene-news-full-2')">阅读更多</button>
+    </div>
+
 </div>
 <!-- 场景：新闻完整版 -->
-<div class="scene" id="scene-news-full">
+ <div class="scene" id="scene-news-full">
+    <div class="news-block" style="margin-bottom:0;">
+        <button class="read-more back" onclick="goto('scene-news')">‹ 返回新闻</button>
+        <span class="category-tag">新闻</span>
+
+        <div class="news-date">2026 / 10 / 18</div>
+        <h1 class="news-title">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</h1>
+        <div class="news-source">by Báo Tin</div>
+
+        <div class="dialogue">
+            <p><span class="translate-target">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</span></p>
+            <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的场贩摊位<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
+            <p>当地主办坦言需要照顾专门远道而来的庞大粉丝群体并不容易，在场馆周围设立了许多汉字标识以及相关人员辅助进场，周边的相关公共场所也开到很晚，帮助<span class="term-toggle" onclick="toggleTerm(this)">Sanger<span class="term-content">(người hâm mộ)</span></span>提供帮助和体验当地风情。不过与此同时，Outof5的男团成员也为越南站做了很多，他们为了呼吁粉丝文明观发布的文明观演通知，在越南站因为专场布置和当地特殊情况做了一些辅助说明，包括男团成员在开场时也提供了越南语问候和特地在本次表演的巡演推出的越南语单曲《Sáng》。</p>
+            <p>不过据粉丝描述，似乎被放在气球里的幸运饼干字条是中英双语，颜色分别是五位成员的应援色。</p>
+            <p><span class="color-translate" onclick="toggleColorTranslate(this)">𢆥 成 員 尼 拱 㐌 体 現 特 牟 色 特 体 現𧵑 𨉟 在 越 南:𧹼甘鐄撑紫</span></p>
+            <p>总而言之表演仍然顺利结束，粉丝表示Outof5为了此次回归做了很多努力，男团成员E也表示“Xin lỗi，感谢这里的社区帮助，尽管前两天因为过分激动会有一点睡眠不足，但是仍然得到了不错的表现和热烈的情感支持，以及随团队顺利地完成了表演。”</p>
+            <p>在聊起对下一站的展望时，因为包括当地粉丝和演艺统筹人员似乎也已经确定下一站不会依旧开在越南。但是偶像团体的公司似乎仍然对此表示保密，他们只是会去尽力带来更好的表演，并且调整状态。</p>
+            <p>不过当地粉丝thao表示:</p>
+            <p><span class="translate-target">Dù đi đâu cũng sẽ tiếp tục đi theo.</span></p>
+            <p>诶？无论是距离越南多远的地方吗？</p>
+            <p><span class="translate-target">Chỉ cần có thể tìm thấy họ là được.</span></p>
+        </div>
+    </div>
+ </div>
+<!-- 场景：新闻完整版 · 专访 -->
+<div class="scene" id="scene-news-full-2">
     <div class="news-block" style="margin-bottom:0;">
         <button class="read-more back" onclick="goto('scene-news')">‹ 返回新闻</button>
         <span class="category-tag">新闻</span>
@@ -1646,10 +1728,11 @@
             <p>这似乎与他们的团队概念相吻合，Outof5的五位成员在概念中是在宇宙大爆炸后没有被观测到的已知物。他们在猜测宇宙中除了起伏的恒星外，是否在人类产生之前就已经有了现在被称作太空垃圾我们以为是人造物的产品，却早已存在，或许只是当时无法在地球环境上自然合成的物品，已经飘到了河外星系。</p>
             <p>成员B的概念是纱布，他表示自己很喜欢这个词所携带的医疗系联想，喜欢纱布因为疏织在贴近皮肤时，反倒造成的异物感，前段时间在亚马逊森林的外务让他对这一点有了更深的感触，也成为了《耐心》这支即将回归的曲目的灵感来源。“如果是对宇宙的浩大尺度，纱布究竟有什么意义，宇宙的伤痕是什么？”面对没有回应的宇宙，而他能做的只是与同样四下无人的成员和粉丝群体Sanger创造意义。</p>
             <p>希望用回忆将宇宙填满，也将Outof5这个团队填满。因为团队作为太空，从一片漆黑中，随成员和粉丝创造新的故事。成员说，如果要给团队也找一种介质，Outof5就是一种混沌态，黏稠绵长的物质。</p>
-            <p>但这样似乎也预示着前路的未知，成员坦言因为与首专风格差距过大，很难预测新专的成绩。酸性摇滚的尝试中，也并不知道是否会吸引喜欢新的音乐类型的粉丝。“我们五个并不是互相吸引的关系，并不相对，也并不稳定。我们只是漂浮，在探索前路，团队还有很长的路要走，也许在这一路上会出现诸多团队变动，但Outof5 永远是Outof5。”</p>
+            <p>但这样似乎也预示着前路的未知，成员坦言因为与首专风格差距过大，很难预测新专的成绩。酸性摇滚的尝试中，也并不知道是否会吸引喜欢新的音乐类型的粉丝。“我们五个并不是互相吸引的关系，并不相对，也并不稳定。我们只是漂浮，在探索前路，团队还有”很长的路要走， →也许在这一路上会出现诸多团队变动，但Out 进入of5 永远是Outof5。”</p>
         </div>
     </div>
 </div>
+
 <!-- 场景：音乐与图表 -->
 <div class="scene" id="scene-music">
     <h2 class="music-heading">音乐与图表</h2>
@@ -2002,7 +2085,7 @@
             <div class="forum-floor">
                 <div class="floor-user">过个两三年</div>
                 <div class="floor-content">
-                    <p><span class="floor-reply">@下雨天有多远</span> 你指的就是这个Outof5官网吗，是Outof5的花名和出道年份。</p>
+                    <p><span class="floor-reply">@下雨天有多远</span> 你指的就是这个Outof5官网吗，是Outof5的花名拼音和出道年份。</p>
                 </div>
             </div>
 
@@ -2786,64 +2869,54 @@ function renderForumThread() {
 
     forumReversed = true;
 }
-/* 越南语翻译逻辑 —— 选中时替换为中文 */
+/* 越南语翻译逻辑 —— 选中时替换为中文（支持多句） */
 (function() {
-    const ORIGINAL = 'Vậy thì tốt quá rồi.Mình là fan ở Việt Nam, cho mình hỏi mua vé như thế nào ạ?';
-    const TRANSLATED = '那真是太好了。我是越南的粉丝，请问该如何购买门票呢？';
-
-    let isTranslated = false;
-
-    function findTarget() {
-        return document.querySelector('.translate-target');
-    }
-
-    function translate() {
-        const el = findTarget();
-        if (!el || isTranslated) return;
-        el.textContent = TRANSLATED;
-        isTranslated = true;
-    }
-
-    function revert() {
-        const el = findTarget();
-        if (!el || !isTranslated) return;
-        el.textContent = ORIGINAL;
-        isTranslated = false;
-    }
-
-    function isTargetSelected() {
-        const el = findTarget();
-        if (!el) return false;
-
-        const selection = window.getSelection();
-        if (!selection || selection.rangeCount === 0) return false;
-        if (selection.isCollapsed) return false;
-
-        const selectedText = selection.toString();
-        if (selectedText.includes(ORIGINAL) || selectedText.includes(TRANSLATED)) {
-            return true;
+    const PAIRS = [
+        {
+            original: 'Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.',
+            translated: '男子团体Outof5结束本次回归巡演的首场演出。'
+        },
+        {
+            original: 'Dù đi đâu cũng sẽ tiếp tục đi theo.',
+            translated: '无论在哪里我都会继续追随。'
+        },
+        {
+            original: 'Chỉ cần có thể tìm thấy họ là được.',
+            translated: '只要能找到他们就好。'
+        },
+        {
+            original: 'Vậy thì tốt quá rồi.Mình là fan ở Việt Nam, cho mình hỏi mua vé như thế nào ạ?',
+            translated: '那真是太好了。我是越南的粉丝，请问该如何购买门票呢？'
         }
+    ];
 
-        const range = selection.getRangeAt(0);
-        if (range.intersectsNode) {
-            try {
-                if (range.intersectsNode(el)) return true;
-            } catch (e) {}
-        }
-
-        return false;
+    function findPair(text) {
+        return PAIRS.find(p => text.includes(p.original) || text.includes(p.translated));
     }
 
     function handle() {
-        // 只在论坛内容显示时生效
-        const content = document.getElementById('forumContent');
-        if (!content || content.style.display === 'none') return;
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
 
-        if (isTargetSelected()) {
-            translate();
-        } else {
-            revert();
+        if (selection.isCollapsed) {
+            document.querySelectorAll('.translate-target').forEach(el => {
+                const pair = PAIRS.find(p => p.translated === el.textContent);
+                if (pair) el.textContent = pair.original;
+            });
+            return;
         }
+
+        const selectedText = selection.toString();
+        const pair = findPair(selectedText);
+        if (!pair) return;
+
+        document.querySelectorAll('.translate-target').forEach(el => {
+            if (el.textContent.includes(pair.original) || el.textContent.includes(pair.translated)) {
+                if (el.textContent !== pair.translated) {
+                    el.textContent = pair.translated;
+                }
+            }
+        });
     }
 
     document.addEventListener('selectionchange', handle);
@@ -2854,7 +2927,7 @@ function renderForumThread() {
    登录弹窗
    ============================================================ */
 const LOGIN_USER = '海折射了极光';
-const LOGIN_PASS = '除2022';
+const LOGIN_PASS = 'chu2022';
 
 function openLoginModal() {
     const overlay = document.getElementById('loginModalOverlay');
@@ -2944,6 +3017,45 @@ window.addEventListener('hashchange', function() {
         renderMemberGrid();
     }
 });
+/* ============================================================
+   新闻术语点击展开
+   ============================================================ */
+function toggleTerm(el) {
+    el.classList.toggle('open');
+}
+
+/* 代表色句：选中后固定替换 */
+(function() {
+    const ORIGINAL = '𢆥 成 員 尼 拱 㐌 体 現 特 牟 色 特 体 現𧵑 𨉟 在 越 南:𧹼甘鐄撑紫';
+    const REPLACED = '成员们在越南再一次表现了代表色：đỏ cam vàng xanh tía(红橙黄蓝紫)';
+
+    let done = false;
+
+    function findEl() {
+        return document.querySelector('.color-translate');
+    }
+
+    function check() {
+        if (done) return;
+        const el = findEl();
+        if (!el) return;
+
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+        if (selection.isCollapsed) return;
+
+        const selectedText = selection.toString();
+        if (selectedText.includes('𧹼甘鐄撑紫') || selectedText.includes(ORIGINAL)) {
+            el.textContent = REPLACED;
+            el.classList.add('replaced');
+            done = true;
+        }
+    }
+
+    document.addEventListener('selectionchange', check);
+    document.addEventListener('mouseup', function() { setTimeout(check, 10); });
+    document.addEventListener('touchend', function() { setTimeout(check, 10); });
+})();
 
 </script>
 
