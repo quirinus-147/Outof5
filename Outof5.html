@@ -1410,13 +1410,479 @@
     color: #0b3d2e;
     font-weight: 600;
 }
+/* ===== 联系页 ===== */
+.contact-hint {
+    font-size: 14px;
+    color: #86868b;
+    margin-bottom: 20px;
+}
+
+/* 液态玻璃按钮容器 */
+.contact-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+    max-width: 360px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 10px 32px rgba(0, 0, 0, 0.12),
+        inset 0 1px 1px rgba(255, 255, 255, 0.7),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.15);
+}
+
+/* 单个选项：液态玻璃质感 */
+.contact-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1d1d1f;
+    text-align: left;
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.273);
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9),
+        inset 0 -1px 1px rgba(251, 246, 246, 0.2);
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+}
+
+/* 玻璃顶部的高光条 */
+.contact-option::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(to right,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0.9),
+        rgba(255,255,255,0));
+    pointer-events: none;
+}
+
+.contact-option:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.32);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+/* 选中状态：保留玻璃感，但带绿色调 */
+.contact-option.active {
+    background: rgba(11, 61, 46, 0.18);
+    color: #0b3d2e;
+    font-weight: 700;
+    border-color: rgba(11, 61, 46, 0.35);
+    box-shadow:
+        0 6px 22px rgba(11, 61, 46, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.85);
+}
+
+.contact-option.active::before {
+    content: '✓';
+    font-size: 18px;
+    font-weight: 700;
+    color: #0b3d2e;
+    margin-right: 4px;
+}
+
+/* 移动端 */
+@media (max-width: 480px) {
+    .contact-options {
+        max-width: 100%;
+    }
+    .contact-option {
+        font-size: 15px;
+        padding: 13px 16px;
+    }
+}
+
+/* 表单 */
+.contact-form {
+    margin-top: 8px;
+}
+
+.contact-form-category {
+    display: inline-block;
+    background: #0b3d2e;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    user-select: none;
+}
+
+.contact-field {
+    margin-bottom: 20px;
+}
+
+.contact-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 8px;
+}
+
+.contact-input,
+.contact-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 15px;
+    color: #1d1d1f;
+    background: #ffffff;
+    border: 1px solid #c8c8cc;
+    border-radius: 4px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+    border-color: #0b3d2e;
+}
+
+.contact-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* 弹窗（复用登录弹窗风格，只做这个提示） */
+.contact-alert-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 600;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.contact-alert-overlay.open {
+    display: flex;
+}
+
+.contact-alert {
+    max-width: 420px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #d2d2d7;
+    border-radius: 4px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.contact-alert-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+
+.contact-alert-close {
+    background: none;
+    border: none;
+    color: #86868b;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0 4px;
+}
+
+.contact-alert-body {
+    padding: 20px 16px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333336;
+}
+
+.contact-alert-footer {
+    border-top: 1px solid #e5e5ea;
+    padding: 12px 16px 16px;
+    text-align: right;
+}
+
+.contact-alert-footer button {
+    min-width: 72px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #0b3d2e;
+    border: 1px solid #0b3d2e;
+    color: #ffffff;
+}
+
+.scenecontact-alert-footer button:hover {
+    opacity-contact: 0.85;
+}
+/* ===== 联系页 · 模拟短信 ===== */
+.sms-thread {
+    background: #f7f7f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px 14px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sms-bubble {
+    background: #e9e9eb;
+    color: #1d1d1f;
+    border-radius: 16px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 90%;
+    align-self: flex-start;
+    position: relative;
+}
+
+.sms-bubble p {
+    margin-bottom: 8px;
+}
+
+.sms-bubble p:last-child {
+    margin-bottom: 0;
+}
+
+/* 第二条短信（回复之后出现） */
+.sms-bubble-2 {
+    align-self: flex-start;
+}
+
+/* 输入 D 的区域 */
+.sms-reply {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.sms-reply-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 14px;
+    color: #1d1d1f;
+    background: #ffffff;
+    border: 1px solid #c8c8cc;
+    border-radius: 20px;
+    padding: 8px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+}
+
+.sms-reply-input:focus {
+    border-color: #0b3d2e;
+}
+
+.sms-reply-send {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #0b3d2e;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sms-reply-send:hover {
+    opacity: 0.85;
+}
+/* ===== 单曲页面 · 版本信息 ===== */
+.song-versions {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5ea;
+}
+
+.song-version-meta {
+    font-size: 13px;
+    color: #86868b;
+}
+
+.song-version-meta a {
+    color: #0b3d2e;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.song-version-meta a:hover {
+    opacity: 0.7;
+}
+
+.song-version-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.song-version-list a {
+    color: #0b3d2e;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.song-version-list a:hover {
+    opacity: 0.7;
+}
+/* ===== 页眉图形标识 ===== */
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header .logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    user-select: none;
+}
+
+.header .logo-text span {
+    color: #7ed6a8;
+}
+
+.mark.xs {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 3px;
+    background: #0b3d2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.mark.xs .glyph {
+    position: relative;
+    width: 104px;
+    height: 104px;
+    transform: scale(0.22);
+}
+
+/* 顶部横 */
+.mark.xs .bar-top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 104px;
+    height: 14px;
+    background: #ffffff;
+}
+
+/* 共用竖 */
+.mark.xs .stem {
+    position: absolute;
+    left: 44px;
+    top: 0;
+    width: 14px;
+    height: 104px;
+    background: #ffffff;
+}
+
+/* 下横 */
+.mark.xs .bar-bottom {
+    position: absolute;
+    left: 44px;
+    top: 90px;
+    width: 60px;
+    height: 14px;
+    background: #ffffff;
+}
+
+/* 绿色缺口 */
+.mark.xs .gap {
+    position: absolute;
+    left: 58px;
+    top: 50px;
+    width: 24px;
+    height: 14px;
+    background: #5fd18a;
+    border-radius: 0 7px 7px 0;
+}
+
+/* 圆环 */
+.mark.xs .ring {
+    position: absolute;
+    left: -6px;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 14px solid #ffffff;
+    background: transparent;
+}
     </style>
 </head>
 <body>
 
 <!-- ===== 顶部栏 ===== -->
 <header class="header">
-    <div class="logo">Outof<span>5</span></div>
+    <div class="logo">
+        <div class="mark xs dark header-mark">
+            <div class="glyph">
+                <div class="bar-top"></div>
+                <div class="stem"></div>
+                <div class="bar-bottom"></div>
+                <div class="gap"></div>
+                <div class="ring"></div>
+            </div>
+        </div>
+        <span class="logo-text">Outof<span>5</span></span>
+    </div>
     <button class="menu-toggle" id="menuToggle" aria-label="菜单" onclick="toggleMenu()">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -1469,7 +1935,7 @@
 
     <div class="dialogue">
         <p><span class="translate-target">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</span></p>
-        <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的场贩摊位<span class="term-toggle" onclick="toggleTerm(this)">quầy hàng<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
+        <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
     </div>
     <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
 </div>
@@ -1669,7 +2135,7 @@
         <div class="news-source">by Báo Tin</div>
         <div class="dialogue">
             <p><span class="translate-target">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</span></p>
-            <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的场贩摊位<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
+            <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
         </div>
         <button class="read-more" onclick="goto('scene-news-full')">阅读更多</button>
     </div>
@@ -1699,7 +2165,7 @@
 
         <div class="dialogue">
             <p><span class="translate-target">Nhóm nhạc nam Outof5 khép màn đêm đầu tiên của chuyến lưu diễn.</span></p>
-            <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的场贩摊位<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
+            <p>10月17日晚，中国偶像男子团体Outof5在越南结束了此次主题为<span class="term-toggle" onclick="toggleTerm(this)">UNOBSERVED<span class="term-content">(Chưa được quan sát)</span></span>的巡演首站，同时这也是他们第一次来越表演。当地粉丝热情高涨，不过体育馆外的<span class="term-toggle" onclick="toggleTerm(this)">场贩摊位<span class="term-content">（quầy hàng）</span></span>和场馆周围的安检秩序也得到了有效保障。</p>
             <p>当地主办坦言需要照顾专门远道而来的庞大粉丝群体并不容易，在场馆周围设立了许多汉字标识以及相关人员辅助进场，周边的相关公共场所也开到很晚，帮助<span class="term-toggle" onclick="toggleTerm(this)">Sanger<span class="term-content">(người hâm mộ)</span></span>提供帮助和体验当地风情。不过与此同时，Outof5的男团成员也为越南站做了很多，他们为了呼吁粉丝文明观发布的文明观演通知，在越南站因为专场布置和当地特殊情况做了一些辅助说明，包括男团成员在开场时也提供了越南语问候和特地在本次表演的巡演推出的越南语单曲《Sáng》。</p>
             <p>不过据粉丝描述，似乎被放在气球里的幸运饼干字条是中英双语，颜色分别是五位成员的应援色。</p>
             <p><span class="color-translate" onclick="toggleColorTranslate(this)">𢆥 成 員 尼 拱 㐌 体 現 特 牟 色 特 体 現𧵑 𨉟 在 越 南:𧹼甘鐄撑紫</span></p>
@@ -1823,19 +2289,21 @@
                 演艺人员
                 <span class="artist-arrow"></span>
             </button>
-            <div class="artist-menu" id="artistMenu">
-                <button class="artist-menu-item" onclick="selectArtist('A')">A</button>
-                <button class="artist-menu-item" onclick="selectArtist('B')">B</button>
-                <button class="artist-menu-item" onclick="selectArtist('C')">C</button>
-                <button class="artist-menu-item" onclick="selectArtist('D')">D</button>
-                <button class="artist-menu-item" onclick="selectArtist('E')">E</button>
-                <button class="artist-menu-item" onclick="selectArtist('all')">all</button>
-            </div>
+            <div class="artist-menu" id="artistMenu"></div>
         </div>
     </div>
 
     <!-- 内容区，点哪个按钮就在这里显示对应内容 -->
     <div class="song-panel" id="songPanel"></div>
+    <!-- 版本信息：只有从深中来 + 排序正确后才显示 -->
+    <div class="song-versions" id="songVersions" style="display:none;">
+        <div class="song-version-meta">2026/7/18 最后编辑，<a href="javascript:void(0)" onclick="toggleVersionList()">查看历史版本</a></div>
+        <div class="song-version-list" id="songVersionList" style="display:none;">
+            <a href="javascript:void(0)" onclick="switchSongVersion('current')">2026/7/18</a>
+            <a href="javascript:void(0)" onclick="switchSongVersion('v20240913')">2024/9/13</a>
+            <a href="javascript:void(0)" onclick="switchSongVersion('v20230314')">2023/3/14</a>
+        </div>
+    </div>
 </div>
     <!-- 占位场景 -->
     <div class="scene placeholder-scene" id="scene-placeholder">
@@ -1852,6 +2320,68 @@
             <span class="member-footer-url">Outof5.com</span>网址:Outof5.html#members=5 是偶像团体Outof5的官方网站，为Sanger运营。
         </div>
         <div class="member-footer-copy">©2022-2026</div>
+    </div>
+</div>
+<!-- 场景：联系 -->
+<div class="scene" id="scene-contact">
+
+    <h2 class="music-heading">联系</h2>
+
+    <p class="contact-hint">请选择您想要查看的反馈/短信类别</p>
+
+    <div class="contact-options">
+        <button class="contact-option" onclick="selectContact('account', this)">账户相关</button>
+        <button class="contact-option" onclick="selectContact('show', this)">演出相关</button>
+        <button class="contact-option" onclick="selectContact('info', this)">信息更正</button>
+        <button class="contact-option" onclick="selectContact('site', this)">网站反馈</button>
+    </div>
+
+    <div class="contact-form" id="contactForm" style="display:none;">
+
+        <div class="contact-form-category" id="contactCategory">账户相关</div>
+<!-- 演出相关：模拟短信区域（默认隐藏） -->
+    <div class="sms-thread" id="smsThread" style="display:none;">
+        <!-- 第一条短信 -->
+        <div class="sms-bubble">
+            <p>您购买的【Outof5巡演-越南站】将于当地时间【10月17日19:30】开演。</p>
+            <p>检票时间:演出开始前两小时开始检票，演出开始后半小时停止检票。</p>
+            <p>请携带相关证件，凭证入场。</p>
+            <p>继续接收消息请回D</p>
+        </div>
+
+        <!-- 输入 D -->
+        <div class="sms-reply">
+            <input type="text" class="sms-reply-input" id="smsReplyInput" placeholder="信息 · 短信" maxlength="4">
+            <button class="sms-reply-send" onclick="sendSmsReply()">发送</button>
+        </div>
+
+        <!-- 第二条短信（默认隐藏） -->
+        <div class="sms-bubble sms-bubble-2" id="smsSecond" style="display:none;">
+            <p>您的座位号为A-12-08，进场后请按票面座位就座。再次提醒您，禁止携带录音录像专业摄影设备，三角支架，发光物，应援物，食物及瓶装水，违禁品等物品入场。</p>
+        </div>
+    </div>
+
+    <!-- 账户相关：模拟短信（默认隐藏） -->
+    <div class="sms-thread" id="smsThreadAccount" style="display:none;">
+        <div class="sms-bubble">
+            <p>【Outof5官方】您好，您的特权码为7Kx9mP2qLw4t，请复制到所思使用。</p>
+        </div>
+        <div class="sms-bubble">
+            <p>【Outof5官方】您好，您申请重置密码的操作已成功。您的Outof5.com密码已重置。</p>
+        </div>
+    </div>
+
+        <div class="contact-field">
+            <label class="contact-label">Outof5.com用户名</label>
+            <input type="text" class="contact-input" id="contactUsername" value="海折射了极光">
+        </div>
+
+        <div class="contact-field">
+            <label class="contact-label">描述</label>
+            <textarea class="contact-textarea" id="contactDesc" rows="5" placeholder="请描述您的问题…"></textarea>
+        </div>
+
+        <button class="check-submit" onclick="submitContact()">提交</button>
     </div>
 </div>
     <!-- 场景：论坛（含粉丝检查） -->
@@ -2130,6 +2660,21 @@
         </div>
     </div>
 </div>
+<!-- 联系页 · 提交后弹窗 -->
+<div class="contact-alert-overlay" id="contactAlertOverlay" onclick="closeContactAlert()">
+    <div class="contact-alert" onclick="event.stopPropagation()">
+        <div class="contact-alert-titlebar">
+            <span>安全提醒</span>
+            <button class="contact-alert-close" onclick="closeContactAlert()">×</button>
+        </div>
+        <div class="contact-alert-body" id="contactAlertBody">
+            您的账户疑似在 --:-- 异地登录。
+        </div>
+        <div class="contact-alert-footer">
+            <button onclick="closeContactAlert()">知道了</button>
+        </div>
+    </div>
+</div>
 
 </main>
 
@@ -2160,6 +2705,7 @@ const SONG_DATA = {
         }
     },
     '从深中来': {
+        // 默认（当前版本）
         performance: '《从深中来》这首歌在Outof5的现场版中共表演了19次，8国11个城市，表演最多的一年是2023年。',
         history: '《从深中来》是Outof5成员最喜欢作为开场曲目的歌曲，成曲于2022年初，在2024年时候进行了更重新编舞及编曲，使其更侧重于舞蹈方面的展示。《从深中来》是齐舞曲目，无特殊缘故是全部成员上场。\n\n《从深中来》灵感来源是开场的时候舞台灯打在成员上的刺激感，而开场前最后的备场，在黑暗中的成员，实际上还并不清楚现场氛围，只能通过声音勉强揣摩，与象征着团应援色的黑色，与团概念相关的混沌相契合。歌曲前半部分使用了大量不协和音程，编舞偏向现代舞风格，后面半段更接近于传统的偶像团体舞蹈，强调多人整齐划一，编曲风格也更接近于美式流行。',
         artists: {
@@ -2168,6 +2714,33 @@ const SONG_DATA = {
             C: '《从深中来》在南非开普敦等11个城市被C现场表演。',
             D: '《从深中来》在南非开普敦等8个城市被D现场表演。',
             E: '《从深中来》在美国底特律等9个城市被E现场表演。'
+        },
+
+        // 2024/9/13 版本
+        v20240913: {
+            performance: '《从深中来》这首歌在Outof5的现场版中共表演了16次，5国8个城市，表演最多的一年是2023年。',
+            history: '《从深中来》是截止到目前，Outof5最常作为开场曲目的歌曲，成曲于2022年初，在今年，介由成员F的帮助对此进行了重新编舞及编曲，使其更侧重于舞蹈专业的展示，也更好的辅助团体进行舞台张力方面的表现。《从深中来》是齐舞曲目，无特殊缘故是全部成员上场。\n\n《从深中来》灵感来源是开场的时候舞台灯打在成员上的刺激感，而开场前最后的备场，在黑暗中的成员，实际上还并不清楚现场氛围，只能通过声音勉强揣摩，与象征着团应援色的黑色，与团概念相关的混沌相契合。歌曲前半部分使用了大量不协和音程，编舞偏向现代舞风格，后面半段更接近于传统的偶像团体舞蹈，强调多人整齐划一，编曲风格也更接近于美式流行。',
+            artists: {
+                A: '《从深中来》在南非开普敦等8个城市被A现场表演。',
+                B: '《从深中来》在南非开普敦等5个城市被B现场表演。',
+                C: '《从深中来》在南非开普敦等8个城市被C现场表演。',
+                D: '《从深中来》在南非开普敦等6个城市被D现场表演。',
+                E: '《从深中来》在美国底特律等6个城市被E现场表演。',
+                F: '《从深中来》在韩国仁川等3个城市被F现场表演。'
+            }
+        },
+
+        // 2023/3/14 版本
+        v20230314: {
+            performance: '《从深中来》这首歌在Outof5的现场版中共表演了5次，3国4个城市，表演最多的一年是2022年。',
+            history: '《从深中来》是截止到目前，Outof5最常作为开场曲目的歌曲，成曲于2022年初，作为首专的重要作品，该曲主要侧重于团体展示，以及，通过这首齐唱曲目，希望让人有耳目一新的感觉。\n\n《从深中来》灵感来源是Sangre 一词，该词与粉丝名Sanger形成对应关系，在西班牙语中意为血液，在准备面对粉丝的过程中，台下备场通过观察自己调整状态时，在混沌中的成员，与象征着团应援色的红黑色，通过该曲表现血液般黏稠的质感和对粉丝的深厚情谊。歌曲前半部分使用了大量不协和音程，编舞偏向现代舞风格，后面半段的编曲风格更接近于美式流行。',
+            artists: {
+                A: '《从深中来》在南非开普敦等4个城市被A现场表演。',
+                B: '《从深中来》在南非开普敦等3个城市被B现场表演。',
+                C: '《从深中来》在南非开普敦等4个城市被C现场表演。',
+                D: '《从深中来》在南非开普敦等4个城市被D现场表演。',
+                E: '《从深中来》在美国底特律等2个城市被E现场表演。'
+            }
         }
     },
     '继续，然后永远': {
@@ -2324,13 +2897,12 @@ let currentSongName = '';
         }
         if (page === 'contact') {
     if (!state.loggedIn) {
-        // 未登录，不跳转，无提示
+        // 未登录，不跳转
         return;
     }
-    goto('scene-placeholder');
+    goto('scene-contact');
     state.currentPage = 'contact';
-    document.getElementById('placeholderTitle').textContent = '联系';
-    document.getElementById('placeholderDesc').textContent = '「联系」内容暂未开放，敬请期待。';
+    resetContact();
     return;
 }
 
@@ -2754,6 +3326,8 @@ function checkAnswers() {
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(bindAlbums, 100);
     });
+    // 如果正在看从深中来，锁定后显示版本信息
+        updateSongVersionsVisibility();
 })();
 
 /* ============================================================
@@ -2761,6 +3335,7 @@ function checkAnswers() {
    ============================================================ */
 function openSong(name) {
     currentSongName = name;
+    currentSongVersion = 'current';
 
     const title = document.getElementById('songPageTitle');
     if (title) title.textContent = '《' + name + '》';
@@ -2777,22 +3352,28 @@ function openSong(name) {
     showSongPanel('performance');
 
     goto('scene-song-placeholder');
+    updateSongVersionsVisibility();
+    rebuildArtistMenu();
 }
-
 function showSongPanel(type) {
     const panel = document.getElementById('songPanel');
     if (!panel) return;
 
-    const data = SONG_DATA[currentSongName];
-    if (!data) {
+    const base = SONG_DATA[currentSongName];
+    if (!base) {
         panel.innerHTML = '<p>内容暂未开放，敬请期待。</p>';
         return;
+    }
+
+    // 从深中来：根据当前版本取数据
+    let data = base;
+    if (currentSongName === '从深中来' && currentSongVersion !== 'current') {
+        data = base[currentSongVersion] || base;
     }
 
     if (type === 'performance') {
         panel.innerHTML = '<p>' + data.performance + '</p>';
     } else if (type === 'history') {
-        // 支持换行，把 \n\n 换成两个 <p>
         const paragraphs = data.history.split('\n\n').map(function(p) {
             return '<p>' + p + '</p>';
         }).join('');
@@ -2814,24 +3395,34 @@ function selectArtist(who) {
     const panel = document.getElementById('songPanel');
     if (!panel) return;
 
-    const data = SONG_DATA[currentSongName];
-    if (!data) {
+    const base = SONG_DATA[currentSongName];
+    if (!base) {
         panel.innerHTML = '<p>内容暂未开放，敬请期待。</p>';
-    } else if (who === 'all') {
-        // all：只显示参与过这首歌表演的成员
-        const performed = [];
-        ['A', 'B', 'C', 'D', 'E'].forEach(function(m) {
-            const text = data.artists[m];
-            if (text && !text.includes('从未')) {
-                performed.push(m);
-            }
-        });
-        panel.innerHTML = '<p>参与过《' + currentSongName + '》现场表演的成员：' + performed.join('、') + '</p>';
     } else {
-        // 具体成员：只显示该成员在这首歌里的内容
-        const text = data.artists[who];
-        panel.innerHTML = text ? '<p>' + text + '</p>' : '<p>暂无信息。</p>';
+        // 从深中来：根据版本取数据
+        let data = base;
+        if (currentSongName === '从深中来' && currentSongVersion !== 'current') {
+            data = base[currentSongVersion] || base;
+        }
+
+        // 当前版本里实际存在的成员
+        const members = Object.keys(data.artists);
+
+        if (who === 'all') {
+            const performed = [];
+            members.forEach(function(m) {
+                const text = data.artists[m];
+                if (text && !text.includes('从未')) {
+                    performed.push(m);
+                }
+            });
+            panel.innerHTML = '<p>参与过《' + currentSongName + '》现场表演的成员：' + performed.join('、') + '</p>';
+        } else {
+            const text = data.artists[who];
+            panel.innerHTML = text ? '<p>' + text + '</p>' : '<p>暂无信息。</p>';
+        }
     }
+    
 
     const menu = document.getElementById('artistMenu');
     const toggle = document.getElementById('artistToggle');
@@ -3056,7 +3647,181 @@ function toggleTerm(el) {
     document.addEventListener('mouseup', function() { setTimeout(check, 10); });
     document.addEventListener('touchend', function() { setTimeout(check, 10); });
 })();
+/* ============================================================
+   联系页
+   ============================================================ */
+const CONTACT_CATEGORIES = {
+    account: '账户相关',
+    show: '演出相关',
+    info: '信息更正',
+    site: '网站反馈'
+};
 
+let currentContactCategory = null;
+
+function resetContact() {
+    // 重置为未选择状态
+    currentContactCategory = null;
+
+    document.querySelectorAll('.contact-option').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    const form = document.getElementById('contactForm');
+    if (form) form.style.display = 'none';
+
+    const user = document.getElementById('contactUsername');
+    if (user) user.value = '海折射了极光';
+
+    const desc = document.getElementById('contactDesc');
+    if (desc) desc.value = '';
+}
+
+function selectContact(key, btn) {
+    currentContactCategory = key;
+
+    document.querySelectorAll('.contact-option').forEach(b => {
+        b.classList.remove('active');
+    });
+    btn.classList.add('active');
+
+    const form = document.getElementById('contactForm');
+    if (form) form.style.display = 'block';
+
+    const cat = document.getElementById('contactCategory');
+    if (cat) cat.textContent = CONTACT_CATEGORIES[key] || '';
+
+    const user = document.getElementById('contactUsername');
+    if (user && !user.value) user.value = '海折射了极光';
+
+    // 演出相关 → 原来的短信区；账户相关 → 新的短信区
+    const smsShow = document.getElementById('smsThread');
+    if (smsShow) {
+        smsShow.style.display = (key === 'show') ? 'flex' : 'none';
+    }
+
+    const smsAccount = document.getElementById('smsThreadAccount');
+    if (smsAccount) {
+        smsAccount.style.display = (key === 'account') ? 'flex' : 'none';
+    }
+
+    // 每次重新选择时，重置短信状态
+    const second = document.getElementById('smsSecond');
+    if (second) second.style.display = 'none';
+    const replyInput = document.getElementById('smsReplyInput');
+    if (replyInput) replyInput.value = '';
+}
+
+/* 模拟短信：输入 D 后显示第二条 */
+function sendSmsReply() {
+    const input = document.getElementById('smsReplyInput');
+    const second = document.getElementById('smsSecond');
+    if (!input || !second) return;
+
+    const val = input.value.trim().toUpperCase();
+    if (val === 'D') {
+        second.style.display = 'block';
+        input.value = '';
+        input.disabled = true;  // 可选：回复过就禁用输入框
+    }
+}
+
+function submitContact() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+
+    const body = document.getElementById('contactAlertBody');
+    if (body) {
+        body.textContent = '您的账户疑似在 ' + hh + ':' + mm + ' 异地登录。如果这是您本人，可以忽略此弹窗，如果不是，请立即重置密码。';
+    }
+
+    const overlay = document.getElementById('contactAlertOverlay');
+    if (overlay) overlay.classList.add('open');
+}
+
+function closeContactAlert() {
+    const overlay = document.getElementById('contactAlertOverlay');
+    if (overlay) overlay.classList.remove('open');
+}
+/* ============================================================
+   单曲页面 · 版本切换（仅从深中来）
+   ============================================================ */
+let currentSongVersion = 'current';
+
+function toggleVersionList() {
+    const list = document.getElementById('songVersionList');
+    if (list) {
+        list.style.display = (list.style.display === 'none') ? 'flex' : 'none';
+    }
+}
+
+function switchSongVersion(version) {
+    if (currentSongName !== '从深中来') return;
+    currentSongVersion = version;
+    rebuildArtistMenu();
+
+    // 重新渲染当前面板（表演/历史/演艺人员）
+    // 根据当前面板状态决定重渲染哪个
+    const panel = document.getElementById('songPanel');
+    if (!panel) return;
+
+    // 简单起见：重置为表演
+    showSongPanel('performance');
+}
+
+// 从深中来、且排序锁定后，显示版本信息
+function updateSongVersionsVisibility() {
+    const box = document.getElementById('songVersions');
+    if (!box) return;
+
+    const locked = document.getElementById('scene-music') &&
+        document.querySelector('#scene-music .album.locked');
+
+    if (currentSongName === '从深中来' && locked) {
+        box.style.display = 'block';
+    } else {
+        box.style.display = 'none';
+    }
+}
+/* 根据当前歌 + 当前版本，重建演艺人员菜单 */
+function rebuildArtistMenu() {
+    const menu = document.getElementById('artistMenu');
+    if (!menu) return;
+
+    menu.innerHTML = '';
+
+    const base = SONG_DATA[currentSongName];
+    if (!base) return;
+
+    // 当前版本的数据
+    let data = base;
+    if (currentSongName === '从深中来' && currentSongVersion !== 'current') {
+        data = base[currentSongVersion] || base;
+    }
+
+    // 实际存在的成员（按 A B C D E F 顺序排）
+    const order = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const members = order.filter(m => data.artists && data.artists[m]);
+
+    members.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'artist-menu-item';
+        btn.textContent = m;
+        btn.onclick = function() { selectArtist(m); };
+        menu.appendChild(btn);
+    });
+
+    // 如果成员数量等于 5，说明没有 F，加一个 all
+    if (members.length === 5) {
+        const btn = document.createElement('button');
+        btn.className = 'artist-menu-item';
+        btn.textContent = 'all';
+        btn.onclick = function() { selectArtist('all'); };
+        menu.appendChild(btn);
+    }
+    // 如果成员数量是 6（有 F），就不加 all
+}
 </script>
 
 </body>
